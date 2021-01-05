@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        QRCode
+// @name        TrackQR
 // @namespace   https://traceability24.eu/
 // @include     https://traceability24.eu/batches/view/*
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
