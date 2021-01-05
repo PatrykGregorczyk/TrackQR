@@ -4,7 +4,7 @@
 // @include     https://traceability24.eu/batches/view/*
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.2
+// @version     0.4
 // @grant       none
 // ==/UserScript==
 
