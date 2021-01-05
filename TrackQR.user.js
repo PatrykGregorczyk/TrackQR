@@ -2,8 +2,8 @@
 // @name        QRCode
 // @namespace   https://traceability24.eu/
 // @include     https://traceability24.eu/batches/view/*
-// @updateURL
-// @downloadURL
+// @updateURL		https://raw.githubusercontent.com/PatrykGregorczyk/TrackQR/main/raw/TrackQR.user.js
+// @downloadURL https://raw.githubusercontent.com/PatrykGregorczyk/TrackQR/main/raw/TrackQR.user.js
 // @version     0.1
 // @grant       none
 // ==/UserScript==
