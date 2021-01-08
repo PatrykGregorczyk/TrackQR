@@ -176,14 +176,14 @@ function PDFBig() {
   var artwid = 260;
 	if(TIND === '3.1.1.48' || TIND === '3.1.1.47') {
 		artwid = 187;
-    doc
+		doc
 			 .save()
 		 	 .translate(493, 60)
  		 	 .scale(1.8)
   	 	 .path(s, 10, 10)
   	 	 .fill('black', 'even-odd')
   	   .restore();
-    }
+	}
 
   doc
   	 .save()
