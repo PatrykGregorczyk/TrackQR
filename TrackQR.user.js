@@ -4,7 +4,7 @@
 // @include     https://traceability24.eu/batches/view/*
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.56
+// @version     0.57
 // @grant       none
 // ==/UserScript==
 
@@ -120,7 +120,7 @@ function PDFMini() {
 	doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
 	doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-	if(TIND === ('3.1.1.48' || '3.1.1.47' || '3.1.1.77' || '3.1.1.78') {
+	if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78') {
   doc
 		 .save()
 		 .translate(10, 12)
@@ -174,7 +174,7 @@ function PDFBig() {
 	doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
 	doc.registerFont('abl', new Buffer(fontabl, "base64"));
   var artwid = 260;
-	if(TIND === ('3.1.1.48' || '3.1.1.47' || '3.1.1.77' || '3.1.1.78') {
+	if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78') {
 		artwid = 187;
 		doc
 			 .save()
