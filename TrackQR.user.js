@@ -4,7 +4,7 @@
 // @include     https://traceability24.eu/batches/view/*
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.57
+// @version     0.59
 // @grant       none
 // ==/UserScript==
 
@@ -63,6 +63,11 @@ var DPR = $("h5.text-info").text();
 var PARTIA = $(".card-header > strong:nth-child(1)").text();
 var PRODUKT = $("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").text();
 
+    var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3));
+    var SprDU = new Date(TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3],(TDUB[5] + TDUB[6])-1, TDUB[8] + TDUB[9]);
+    var SprMHD = new Date(TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3], (TMHD[5] + TMHD[6])-1, TMHD[8] + TMHD[9]);
+    var SprDPR = new Date(DPR[0] + DPR[1] + DPR[2] + DPR[3], (DPR[5] + DPR[6])-1, DPR[8] + DPR[9]);
+
 TMHD = TMHD[8] + TMHD[9] + '.' + TMHD[5] + TMHD[6] + '.' + TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3];
 TDUB = TDUB[8] + TDUB[9] + '.' + TDUB[5] + TDUB[6] + '.' + TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3];
 DPR = DPR[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
@@ -71,7 +76,7 @@ var svgNode = QRCode({
 
      msg :  STX + 'M' + TIND + ' (QR)' + ETX
  					+ STX + 'UTMHD' + SEP + TMHD + ETX
-				  + STX + 'UTLOT' + SEP + TLOT + ETX
+                         + STX + 'UTLOT' + SEP + TLOT + ETX
 				 	+ STX + 'UTATC' + SEP + TATC + ETX
 				 	+ STX + 'UTDUB' + SEP + TDUB + ETX
 				 	+ STX + 'UTGGN' + SEP + TGGN + ETX
@@ -110,6 +115,64 @@ pdfbutt2.style.cursor = "pointer";
 pdfbutt2.src = sxd2;
 document.body.appendChild(pdfbutt2);
 
+
+  if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75') {
+      if(TIND != '3.1.1.75') {
+      if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU))>21) {
+           var warn = document.createElement("div");
+           warn.style.position = 'fixed';
+           warn.style.top = '50px';
+           warn.style.left = '10px';
+           warn.style.color = '#ff00006b';
+           warn.style.background = '#fffb003b';
+           warn.innerHTML = '<h2>STARA DATA UBOJU! (21 dni)</h2>';
+           document.body.appendChild(warn);
+      }
+      }
+      if(TLOT.length != 10) {
+          var warn1 = document.createElement("div");
+          warn1.style.position = 'fixed';
+          warn1.style.top = '160px';
+          warn1.style.left = '10px';
+          warn1.style.color = '#ff00006b';
+          warn1.style.background = '#fffb003b';
+          warn1.innerHTML = '<h2>BŁĘDNY LOT!</h2>';
+          document.body.appendChild(warn1);
+      }
+      if(LotDate.getTime() != SprDPR.getTime()) {
+          var warn2 = document.createElement("div");
+          warn2.style.position = 'fixed';
+          warn2.style.top = '270px';
+          warn2.style.left = '10px';
+          warn2.style.color = '#ff00006b';
+          warn2.style.background = '#fffb003b';
+          warn2.innerHTML = '<h2>BŁĘDNA DATA PRODUKCJI!</h2>';
+          document.body.appendChild(warn2);
+      }
+      if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDPR))>14 || new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDPR)<7) {
+          var warn3 = document.createElement("div");
+          warn3.style.position = 'fixed';
+          warn3.style.top = '380px';
+          warn3.style.left = '10px';
+          warn3.style.color = '#ff00006b';
+          warn3.style.background = '#fffb003b';
+          warn3.innerHTML = '<h2>ZŁA DATA PRZYDATNOŚCI!</h2>';
+          document.body.appendChild(warn3);
+      }
+          if(TIND === '3.1.1.75') {
+          if(TLOT != TATC) {
+          var warn4 = document.createElement("div");
+          warn4.style.position = 'fixed';
+          warn4.style.top = '490px';
+          warn4.style.left = '10px';
+          warn4.style.color = '#ff00006b';
+          warn4.style.background = '#fffb003b';
+          warn4.innerHTML = '<h2>TRACEABILITY I<br>LOT RÓŻNIĄ SIĘ!</h2>';
+          document.body.appendChild(warn4);
+      }
+    }
+  }
+
 pdfbutt.addEventListener("click", PDFMini, false);
 pdfbutt2.addEventListener("click", PDFBig, false);
 
@@ -121,7 +184,7 @@ function PDFMini() {
 	doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
 	if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78') {
-  doc
+           doc
 		 .save()
 		 .translate(10, 12)
  		 .scale(1.2)
@@ -149,7 +212,7 @@ function PDFMini() {
 				doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
     	}
 
-			if(!(TLOT === TATC)){
+			if(TLOT != TATC){
    			doc.text('Traceability: '+TATC,10, 68, {height:0});
     	}
 	doc
@@ -217,7 +280,7 @@ function PDFBig() {
         		.fontSize(22).text(TGGN, 300, 300, {height:0});
     	}
 
-			if(!(TLOT === TATC)){
+			if(TLOT != TATC){
    			doc
            .fontSize(18).text('Traceability: ',30, 270, {height:0})
        		 .fontSize(22).text(TATC,30, 293, {height:0});
