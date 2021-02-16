@@ -4,7 +4,7 @@
 // @include     *traceability24.eu*
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.59
+// @version     0.60
 // @grant       none
 // ==/UserScript==
 
