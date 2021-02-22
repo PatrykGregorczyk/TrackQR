@@ -273,6 +273,7 @@ function PDFBig() {
   	 	 .fill('black', 'even-odd')
   	   .restore();
 	}
+	
 
   doc
   	 .save()
