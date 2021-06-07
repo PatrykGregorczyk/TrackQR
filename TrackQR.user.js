@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.80
+// @version     0.83
 // @grant       none
 // ==/UserScript==
 
@@ -217,7 +217,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.getElementById("qrcode").getElementsByTagName("img")[0].src = "data:image/svg+xml;base64," + base64Data;
     document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
-    if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106') {
+    if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
       if(TIND != '3.1.1.75') {
           if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU))>19) {
               var warn = document.createElement("div");
@@ -261,7 +261,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
           warn3.innerHTML = '<h2>ZŁA DATA PRZYDATNOŚCI!</h2>';
           document.body.appendChild(warn3);
       }
-      if(TIND === '3.1.1.75' || TIND === '3.1.1.106') {
+      if(TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
           if(TLOT != TATC) {
           var warn4 = document.createElement("div");
           warn4.style.position = 'fixed';
@@ -285,7 +285,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106') {
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
             doc
            .save()
 		   .translate(10, 12)
@@ -340,7 +340,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
         var artwid = 260;
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106') {
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
             artwid = 187;
             doc
            .save()
