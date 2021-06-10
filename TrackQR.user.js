@@ -326,6 +326,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 	   .font('pgb')
    	   .text('LOT: '+TLOT,10, 117, {height:0})
 	   .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
+	   doc.addPage();
 
  	    doc.end();
 	    stream.on('finish', function() {
