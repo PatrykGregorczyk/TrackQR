@@ -226,7 +226,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               warn.style.left = '10px';
               warn.style.color = '#ff00006b';
               warn.style.background = '#fffb003b';
-              warn.innerHTML = '<h2>STARA DATA UBOJU! (18 dni)</h2>';
+              warn.innerHTML = '<h2>STARA DATA UBOJU! (' + dusum + ' dni)</h2>';
               document.body.appendChild(warn);
           }
       }
