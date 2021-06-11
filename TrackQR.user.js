@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.83
+// @version     0.85
 // @grant       none
 // ==/UserScript==
 
@@ -220,6 +220,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
       if(TIND != '3.1.1.75') {
           if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU))>19) {
+              var dusum = new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU)-1;
               var warn = document.createElement("div");
               warn.style.position = 'fixed';
               warn.style.top = '50px';
