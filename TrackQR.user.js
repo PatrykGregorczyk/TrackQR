@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.85
+// @version     0.89
 // @grant       none
 // ==/UserScript==
 
@@ -138,6 +138,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var PARTIA = $(".card-header > strong:nth-child(1)").text();
     var PRODUKT = $("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").text();
 
+	const dayOfYear = date =>
+    Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3));
     var SprDU = new Date(TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3],(TDUB[5] + TDUB[6])-1, TDUB[8] + TDUB[9]);
     var SprMHD = new Date(TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3], (TMHD[5] + TMHD[6])-1, TMHD[8] + TMHD[9]);
@@ -219,8 +221,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
       if(TIND != '3.1.1.75') {
-          if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU))>19) {
-              var dusum = new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDU)-1;
+         if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18) {
+              var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
               var warn = document.createElement("div");
               warn.style.position = 'fixed';
               warn.style.top = '50px';
@@ -252,7 +254,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
           warn2.innerHTML = '<h2>BŁĘDNA DATA PRODUKCJI!</h2>';
           document.body.appendChild(warn2);
       }
-      if((new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDPR))>15 || new Intl.DateTimeFormat('pl-PL', {day: 'numeric'}).format(SprMHD-SprDPR)<7) {
+      if(((SprMHD.getTime() - SprDPR.getTime())/ 1000 / 60 / 60 / 24)>19 || ((SprMHD.getTime() - SprDPR.getTime())/1000/60/60/24)<5) {
           var warn3 = document.createElement("div");
           warn3.style.position = 'fixed';
           warn3.style.top = '380px';
