@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.89
+// @version     0.93
 // @grant       none
 // ==/UserScript==
 
@@ -137,6 +137,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var DPR = $("h5.text-info").text();
     var PARTIA = $(".card-header > strong:nth-child(1)").text();
     var PRODUKT = $("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").text();
+	var CERT = $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").text();
 
 	const dayOfYear = date =>
     Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
@@ -220,7 +221,31 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
     if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-      if(TIND != '3.1.1.75') {
+		if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+         if(!(CERT.includes("GG"))) {
+             var warn5 = document.createElement("div");
+              warn5.style.position = 'fixed';
+              warn5.style.top = '600px';
+              warn5.style.left = '10px';
+              warn5.style.color = '#ff00006b';
+              warn5.style.background = '#fffb003b';
+              warn5.innerHTML = '<h2>BRAK CERTYFIKATU!</h2>';
+              document.body.appendChild(warn5);
+         }
+      }
+         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98') {
+          if(!(CERT.includes("ORG"))) {
+             var warn6 = document.createElement("div");
+              warn6.style.position = 'fixed';
+              warn6.style.top = '600px';
+              warn6.style.left = '10px';
+              warn6.style.color = '#ff00006b';
+              warn6.style.background = '#fffb003b';
+              warn6.innerHTML = '<h2>BRAK CERTYFIKATU!</h2>';
+              document.body.appendChild(warn6);
+         }
+		 
+	 if(TIND != '3.1.1.75') {
          if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18) {
               var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
               var warn = document.createElement("div");
