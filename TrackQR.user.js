@@ -244,7 +244,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               warn6.innerHTML = '<h2>BRAK CERTYFIKATU!</h2>';
               document.body.appendChild(warn6);
          }
-		 
+	}
 	 if(TIND != '3.1.1.75') {
          if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18) {
               var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
