@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.93
+// @version     0.96
 // @grant       none
 // ==/UserScript==
 
@@ -233,7 +233,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               document.body.appendChild(warn5);
          }
       }
-         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98') {
+         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98') {
           if(!(CERT.includes("ORG"))) {
              var warn6 = document.createElement("div");
               warn6.style.position = 'fixed';
