@@ -309,7 +309,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               iframe.style.width = '380px';
 			  iframe.style.top = '50px';
 			  
-              iframe.style.left = '1520px';
+              iframe.style.left = '1480px';
               document.body.appendChild(iframe);
 
     pdfbutt.addEventListener("click", PDFMini, false);
