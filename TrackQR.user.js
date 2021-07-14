@@ -302,9 +302,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
           }
        }
     }
-	document.addEventListener('webviewerloaded', function() {
-  PDFViewerApplicationOptions.set('printResolution', 203);
-});
 	var iframe = document.createElement("iframe");
               iframe.style.position = 'fixed';
               iframe.style.height = '777px';
@@ -597,8 +594,8 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 	   
  	    doc.end();
 	    stream.on('finish', function() {
-            const url = stream.toBlobURL('application/pdf');
-            window.open(url);
+            const blob = stream.toBlob('application/pdf');
+          //  window.open(url);
         });
     }
     function PDFBig() {
