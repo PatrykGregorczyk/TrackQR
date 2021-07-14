@@ -312,6 +312,147 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     pdfbutt.addEventListener("click", PDFMini, false);
     pdfbutt2.addEventListener("click", PDFBig, false);
 
+var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPages: true});
+        var stream = doc.pipe(blobStream());
+
+        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
+        doc.registerFont('abl', new Buffer(fontabl, "base64"));
+
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+            doc
+           .save()
+		   .translate(10, 12)
+ 		   .scale(1.2)
+           .path(s, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        } else {
+            doc
+           .save()
+           .translate(7, 38)
+           .scale(0.1*0.9)
+           .path(mil, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        }
+
+        doc
+       .font('abl')
+       .fontSize(11)
+	   .text(PARTIA,67, 9, {height:0, width:230})
+	   .font('pgb')
+	   .text('Data uboju: '+TDUB, 67, 29, {height:0, width:230});
+
+		if(TGGN){
+			doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
+    	}
+
+		if(TLOT != TATC){
+            doc.text('Traceability: '+TATC,10, 68, {height:0});
+    	}
+
+        doc
+  	   .text('Indeks: '+TIND, 10, 84, {height:0})
+	   .text('MHD:', 10, 101, {height:0})
+	   .font('abl')
+  	   .text(TMHD,42, 98.3, {height:0})
+	   .font('pgb')
+   	   .text('LOT: '+TLOT,10, 117, {height:0})
+	   .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
+	   doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
+        doc.registerFont('abl', new Buffer(fontabl, "base64"));
+
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+            doc
+           .save()
+		   .translate(10, 12)
+ 		   .scale(1.2)
+           .path(s, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        } else {
+            doc
+           .save()
+           .translate(7, 38)
+           .scale(0.1*0.9)
+           .path(mil, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        }
+
+        doc
+       .font('abl')
+       .fontSize(11)
+	   .text(PARTIA,67, 9, {height:0, width:230})
+	   .font('pgb')
+	   .text('Data uboju: '+TDUB, 67, 29, {height:0, width:230});
+
+		if(TGGN){
+			doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
+    	}
+
+		if(TLOT != TATC){
+            doc.text('Traceability: '+TATC,10, 68, {height:0});
+    	}
+
+        doc
+  	   .text('Indeks: '+TIND, 10, 84, {height:0})
+	   .text('MHD:', 10, 101, {height:0})
+	   .font('abl')
+  	   .text(TMHD,42, 98.3, {height:0})
+	   .font('pgb')
+   	   .text('LOT: '+TLOT,10, 117, {height:0})
+	   .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
+		doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
+        doc.registerFont('abl', new Buffer(fontabl, "base64"));
+
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+            doc
+           .save()
+		   .translate(10, 12)
+ 		   .scale(1.2)
+           .path(s, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        } else {
+            doc
+           .save()
+           .translate(7, 38)
+           .scale(0.1*0.9)
+           .path(mil, 10, 10)
+           .fill('black', 'even-odd')
+           .restore();
+        }
+
+        doc
+       .font('abl')
+       .fontSize(11)
+	   .text(PARTIA,67, 9, {height:0, width:230})
+	   .font('pgb')
+	   .text('Data uboju: '+TDUB, 67, 29, {height:0, width:230});
+
+		if(TGGN){
+			doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
+    	}
+
+		if(TLOT != TATC){
+            doc.text('Traceability: '+TATC,10, 68, {height:0});
+    	}
+
+        doc
+  	   .text('Indeks: '+TIND, 10, 84, {height:0})
+	   .text('MHD:', 10, 101, {height:0})
+	   .font('abl')
+  	   .text(TMHD,42, 98.3, {height:0})
+	   .font('pgb')
+   	   .text('LOT: '+TLOT,10, 117, {height:0})
+	   .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
+	   
+ 	    doc.end();
+	stream.on('finish', function() {
+    iframe.src = stream.toBlobURL('application/pdf');
+        });
+
     function PDFMini() {
         var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPages: true});
         const stream = doc.pipe(blobStream());
