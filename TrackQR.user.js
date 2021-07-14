@@ -305,7 +305,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 	
 	var iframe = document.createElement("iframe");
               iframe.style.position = 'fixed';
-              iframe.style.height = '600px';
+              iframe.style.height = '777px';
               iframe.style.width = '380px';
 			  iframe.style.top = '50px';
 			  
