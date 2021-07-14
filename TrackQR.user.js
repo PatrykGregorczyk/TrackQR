@@ -302,7 +302,9 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
           }
        }
     }
-	
+	document.addEventListener('webviewerloaded', function() {
+  PDFViewerApplicationOptions.set('printResolution', 203);
+});
 	var iframe = document.createElement("iframe");
               iframe.style.position = 'fixed';
               iframe.style.height = '777px';
