@@ -594,8 +594,8 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 	   
  	    doc.end();
 	    stream.on('finish', function() {
-            const blob = stream.toBlob('application/pdf');
-          //  window.open(url);
+            const url = stream.toBlobURL('application/pdf');
+            window.open(url);
         });
     }
     function PDFBig() {
