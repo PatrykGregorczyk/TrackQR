@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.96
+// @version     0.97
 // @grant       none
 // ==/UserScript==
 
@@ -220,7 +220,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.getElementById("qrcode").getElementsByTagName("img")[0].src = "data:image/svg+xml;base64," + base64Data;
     document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
-    if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+    if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
 		if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
          if(!(CERT.includes("GG"))) {
              var warn5 = document.createElement("div");
@@ -233,7 +233,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               document.body.appendChild(warn5);
          }
       }
-         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98') {
+         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
           if(!(CERT.includes("ORG"))) {
              var warn6 = document.createElement("div");
               warn6.style.position = 'fixed';
@@ -246,7 +246,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
          }
 	}
 	 if(TIND != '3.1.1.75') {
-         if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18) {
+         if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18.1) {
               var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
               var warn = document.createElement("div");
               warn.style.position = 'fixed';
@@ -254,7 +254,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
               warn.style.left = '10px';
               warn.style.color = '#ff00006b';
               warn.style.background = '#fffb003b';
-              warn.innerHTML = '<h2>STARA DATA UBOJU! (' + dusum + ' dni)</h2>';
+              warn.innerHTML = '<h2>STARA DATA UBOJU! (' + Math.round(dusum) + ' dni)</h2>';
               document.body.appendChild(warn);
           }
       }
@@ -289,7 +289,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
           warn3.innerHTML = '<h2>ZŁA DATA PRZYDATNOŚCI!</h2>';
           document.body.appendChild(warn3);
       }
-      if(TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+      if(TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
           if(TLOT != TATC) {
           var warn4 = document.createElement("div");
           warn4.style.position = 'fixed';
@@ -320,26 +320,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
         doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+               doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -364,26 +351,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 	   doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+        doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -408,26 +382,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 		doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+        doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -461,27 +422,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 
         doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
-
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+        doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -506,26 +453,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 	   doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+               doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -550,26 +484,13 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
 		doc.addPage();        doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
 
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-            doc
-           .save()
+               doc.save()
 		   .translate(10, 12)
  		   .scale(1.2)
            .path(s, 10, 10)
            .fill('black', 'even-odd')
            .restore();
-        } else {
-            doc
-           .save()
-           .translate(7, 38)
-           .scale(0.1*0.9)
-           .path(mil, 10, 10)
-           .fill('black', 'even-odd')
-           .restore();
-        }
-
-        doc
-       .font('abl')
+        doc.font('abl')
        .fontSize(11)
 	   .text(PARTIA,67, 9, {height:0, width:230})
 	   .font('pgb')
@@ -605,7 +526,7 @@ var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPag
         doc.registerFont('pgb', new Buffer(fontpgb, "base64"));
         doc.registerFont('abl', new Buffer(fontabl, "base64"));
         var artwid = 260;
-        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
+        if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98'  || TIND === '3.1.1.106' || TIND === '3.1.1.109' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
             artwid = 187;
             doc
            .save()
