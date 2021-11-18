@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     0.97
+// @version     0.98
 // @grant       none
 // ==/UserScript==
 
@@ -17,6 +17,8 @@ console.log($('#b_prod_date'));
 $('.navbar').css("height", "0");
 $('li.nav-item:nth-child(1)').remove();
     console.log($('div.show > a:nth-child(1)'));
+
+console.log($(".text-danger"));
 
 if(window.location.href.toString() === 'https://traceability24.eu/deliveries' || window.location.href.toString().substr(0,42) === 'https://traceability24.eu/deliveries/index'){
     $('div.row:nth-child(1)').remove();
@@ -115,21 +117,33 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
 
 if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/batches/view'){
     $('.pull-right').remove();
-    $('div.card-body:nth-child(4)').css("margin", "0").css("margin-left", "263px").css("margin-right", "263px").css("margin-top", "-72");
+    $('div.card-body:nth-child(4)').css("position", "absolute").css("left", "-100").css("top", "-100");
     $('.col-lg-12').css("margin-bottom", "-28");
-    $('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(1)').css("position", "absolute").css("transform", "scale(0.85)").css("position", "absolute").css("right", "0").css("top", "-26");
-    $('div.card-body:nth-child(3)').css("height", "128");
+    $('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(1)').css("display", "none");
+    $('div.card-body:nth-child(3)').css("height", "83");
     $('div.col-lg-4:nth-child(2)').css("height", "0");
     $('div.card-body:nth-child(2) > div:nth-child(1)').css("margin-bottom", "-35");
     $('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').css("margin-top", "-40").css("transform", "scale(0.7)");
     $('.col-md-7 > div:nth-child(1)').remove();
     $('.card-footer > div:nth-child(1)').css("width", "100%");
+    $('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2)').css("position", "absolute").css("top", "1").css("left", "215");
+    $('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(1)').css("position", "absolute").css("left", "415").css("top", "1");
+    $('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').css("position", "absolute").css("top", "0").css("left", "615");
+    $('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').css("position", "absolute").css("left", "15");
+    $('.col-lg-4').css("max-width", "100%").css("flex", "0 0 100%");
+    $('hr.my-4:nth-child(10)').remove();
+    $('div.row:nth-child(10)').remove();
+    $('div.row:nth-child(9)').css("margin-bottom", "12");
+    $('.card-footer').css("position", "absolute").css("top", "-92").css("background-color", "transparent").css("color", "white !important").css("left", "250");
+    $('.btn').css("line-height", "1");
+
 
     var STX = String.fromCharCode(2);
     var ETX = String.fromCharCode(3);
     var SEP = String.fromCharCode(10);
     var TIND = $(".milcode").text();
-    var TMHD = $(".text-danger").text();
+    var TMHD = $("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text();
+    var TDMR = $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text();
     var TLOT = document.getElementById("qrdata").value;
     var TATC = $("h5.text-warning").text();
     var TDUB = $("h5.text-success").text();
@@ -149,14 +163,20 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     TMHD = TMHD[8] + TMHD[9] + '.' + TMHD[5] + TMHD[6] + '.' + TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3];
     TDUB = TDUB[8] + TDUB[9] + '.' + TDUB[5] + TDUB[6] + '.' + TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3];
     DPR = DPR[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
+    TDMR = TDMR[8] + TDMR[9] + '.' + TDMR[5] + TDMR[6] + '.' + TDMR[0] + TDMR[1] + TDMR[2] + TDMR[3];
 
     $("#qrdata")[0].outerHTML = '<div class="text-info" id="qrdata"><b>'+TLOT+'</b>';
     $('.my-4').css("margin-bottom", "0");
     $('#container > p:nth-child(2)').remove();
     $('div.row > div.col-lg-6').css("height", "30");
-    $(".text-danger").text(TMHD);
+    $("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text(TMHD);
+    $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text(TDMR);
     $("h5.text-success").text(TDUB);
     $("h5.text-info").text(DPR);
+
+    if(TDMR=="00.00.0000"){
+         $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)").remove();
+    }
 
     var svgNode = QRCode({
      msg :  STX + 'M' + TIND + ' (QR)' + ETX
