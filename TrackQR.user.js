@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.02
+// @version     1.03
 // @grant       none
 // ==/UserScript==
 
@@ -65,24 +65,7 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
     $('button.btn-info:nth-child(3)').css("position", "relative").css("top", "-55");
     $('body > p:nth-child(3) > small:nth-child(1)').remove();
 
-    var nowbut = document.createElement("button");
-    nowbut.style.font = 'Lato';
-    nowbut.style.position = 'absolute';
-    nowbut.style.top = '3px';
-    nowbut.style.left = '321px';
-    nowbut.style.padding = '0.20rem 0.75rem';
-    nowbut.style.borderRadius = '0.25rem';
-    nowbut.style.border = '1px solid transparent';
-    nowbut.style.fontWeight = 'bold';
-    nowbut.style.textAllign = 'center';
-    nowbut.style.VerticalAllign = 'middle';
-    nowbut.innerText = 'New';
-    nowbut.color = 'red';
-    nowbut.style.fontSize = '12px';
-    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
-    nowbut.style.cursor = "pointer";
-    nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
-    document.body.appendChild(nowbut);
+    newButton();
 }
 
 
@@ -185,25 +168,7 @@ var CERTPOS  = true;
     $('.col-md-7').css("max-width", "50%");
     $('.col-md-offset-4').css("margin-top", "50");
 
-
-    nowbut = document.createElement("button");
-    nowbut.style.font = 'Lato';
-    nowbut.style.position = 'absolute';
-    nowbut.style.top = '3px';
-    nowbut.style.left = '321px';
-    nowbut.style.padding = '0.20rem 0.75rem';
-    nowbut.style.borderRadius = '0.25rem';
-    nowbut.style.border = '1px solid transparent';
-    nowbut.style.fontWeight = 'bold';
-    nowbut.style.textAllign = 'center';
-    nowbut.style.VerticalAllign = 'middle';
-    nowbut.innerText = 'New';
-    nowbut.color = 'red';
-    nowbut.style.fontSize = '12px';
-    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
-    nowbut.style.cursor = "pointer";
-    nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
-    document.body.appendChild(nowbut);
+    newButton();
     PDFMini(true);
 
     var serializedSVG = new XMLSerializer().serializeToString(svgNode);
@@ -358,5 +323,24 @@ var CERTPOS  = true;
             }
        }
     }
-
+}
+function newButton() {
+    var nowbut = document.createElement("button");
+    nowbut.style.font = 'Lato';
+    nowbut.style.position = 'absolute';
+    nowbut.style.top = '3px';
+    nowbut.style.left = '321px';
+    nowbut.style.padding = '0.20rem 0.75rem';
+    nowbut.style.borderRadius = '0.25rem';
+    nowbut.style.border = '1px solid transparent';
+    nowbut.style.fontWeight = 'bold';
+    nowbut.style.textAllign = 'center';
+    nowbut.style.VerticalAllign = 'middle';
+    nowbut.innerText = 'New';
+    nowbut.color = 'red';
+    nowbut.style.fontSize = '12px';
+    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
+    nowbut.style.cursor = "pointer";
+    nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
+    document.body.appendChild(nowbut);
 }
