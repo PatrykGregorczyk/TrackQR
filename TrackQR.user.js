@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.03
+// @version     1.05
 // @grant       none
 // ==/UserScript==
 
@@ -14,13 +14,8 @@
 
 const COPIES = 3;
 
-console.log($('#b_prod_date'));
-
 $('.navbar').css("height", "0");
 $('li.nav-item:nth-child(1)').remove();
-    console.log($('div.show > a:nth-child(1)'));
-
-console.log($(".pull-right"));
 
 if(window.location.href.toString() === 'https://traceability24.eu/deliveries' || window.location.href.toString().substr(0,42) === 'https://traceability24.eu/deliveries/index'){
     $('div.row:nth-child(1)').remove();
@@ -32,13 +27,13 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
     for(var i = 0; i < document.body.getElementsByClassName('form-group').length-2; i++){
     document.body.getElementsByClassName('form-group')[i].children[1].setAttribute("placeholder", document.body.getElementsByClassName('form-group')[i].children[0].firstChild.data);
     }
-    for(var i = 1; i < 6; i++){
+    for(i = 1; i < 6; i++){
     document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)').remove();
     }
 
 }
-    if(window.location.href.toString().substr(0,40) ===  'https://traceability24.eu/batches/create'){
-            $('div.row:nth-child(1)').remove();
+    if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/create'){
+        $('div.row:nth-child(1)').remove();
         $('#b_prod_date').attr("class", "form-control");
     }
 
@@ -96,9 +91,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     $('.col-lg-1').css("position", "absolute").css("top", "-79").css("left", "277");
     $('.col-md-9').css('max-width', '50%');
 
-  //  document.querySelector('.col-lg-1').setAttribute("onclick", "location.href='myfile.php?bo_table=movie&wr_id=756'")
-
-
     var STX = String.fromCharCode(2);
     var ETX = String.fromCharCode(3);
     var SEP = String.fromCharCode(10);
@@ -116,16 +108,17 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
 	const dayOfYear = date =>
     Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-    var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3));
+    var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
+    var lotISO = LotDate.toISOString();
+    LotDate = new Date(lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3],(lotISO[5] + lotISO[6])-1, lotISO[8] + lotISO[9]);
     var SprDU = new Date(TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3],(TDUB[5] + TDUB[6])-1, TDUB[8] + TDUB[9]);
     var SprMHD = new Date(TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3], (TMHD[5] + TMHD[6])-1, TMHD[8] + TMHD[9]);
     var SprDPR = new Date(DPR[0] + DPR[1] + DPR[2] + DPR[3], (DPR[5] + DPR[6])-1, DPR[8] + DPR[9]);
-
     TMHD = TMHD[8] + TMHD[9] + '.' + TMHD[5] + TMHD[6] + '.' + TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3];
     TDUB = TDUB[8] + TDUB[9] + '.' + TDUB[5] + TDUB[6] + '.' + TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3];
     DPR = DPR[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
+    lotISO = lotISO[8] + lotISO[9] + '.' + lotISO[5] + lotISO[6] + '.' + lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3];
 
-    console.log(SprDPR);
 
    if(TDMR === ""){
        $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
@@ -138,7 +131,7 @@ var CERTPOS  = true;
     for(i = 2;CERTPOS != ""; i++){
     CERTPOS = $(`div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(${i})`).text();
     $(`div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(${i})`).css("position", "absolute").css("left", 15+60*(i-2)).css("top", $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").position.top);
-      console.log(CERTPOS);}
+    }
 
     $("#qrdata")[0].outerHTML = '<div class="text-info" id="qrdata"><b>'+TLOT+'</b>';
     $('.my-4').css("margin-bottom", "0");
@@ -169,102 +162,70 @@ var CERTPOS  = true;
     $('.col-md-offset-4').css("margin-top", "50");
 
     newButton();
-    PDFMini(true);
+    PDFMini(false);
 
     var serializedSVG = new XMLSerializer().serializeToString(svgNode);
     var base64Data = window.btoa(serializedSVG);
     document.getElementById("qrcode").getElementsByTagName("img")[0].src = "data:image/svg+xml;base64," + base64Data;
     document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
-    if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.75' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.106' || TIND === '3.1.1.109' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
-		if(TIND === '3.1.1.48' || TIND === '3.1.1.47' || TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109') {
-         if(!(CERT.includes("GG"))) {
-             var warn5 = document.createElement("div");
-              warn5.style.position = 'fixed';
-              warn5.style.top = '600px';
-              warn5.style.left = '10px';
-              warn5.style.color = '#ff00006b';
-              warn5.style.background = '#fffb003b';
-              warn5.innerHTML = '<h2>BRAK CERTYFIKATU!</h2>';
-              document.body.appendChild(warn5);
-         }
-      }
-         if(TIND === '3.1.1.77' || TIND === '3.1.1.78' || TIND === '3.1.1.97' || TIND === '3.1.1.98' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
-          if(!(CERT.includes("ORG"))) {
-             var warn6 = document.createElement("div");
-              warn6.style.position = 'fixed';
-              warn6.style.top = '600px';
-              warn6.style.left = '10px';
-              warn6.style.color = '#ff00006b';
-              warn6.style.background = '#fffb003b';
-              warn6.innerHTML = '<h2>BRAK CERTYFIKATU!</h2>';
-              document.body.appendChild(warn6);
-         }
-	}
-	 if(TIND != '3.1.1.75') {
-         if(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)>18.1) {
-              var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
-              var warn = document.createElement("div");
-              warn.style.position = 'fixed';
-              warn.style.top = '50px';
-              warn.style.left = '10px';
-              warn.style.color = '#ff00006b';
-              warn.style.background = '#fffb003b';
-              warn.innerHTML = '<h2>STARA DATA UBOJU! (' + Math.round(dusum) + ' dni)</h2>';
-              document.body.appendChild(warn);
-          }
-      }
+        var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
+        var warn = document.createElement("div");
+        warn.style.position = 'fixed';
+        warn.style.top = '50px';
+        warn.style.left = '10px';
+        warn.style.color = '#ff00006b';
+        warn.style.background = '#fffb003b';
+        warn.innerHTML = 'OD UBOJU DO KOŃCA MHD: ' + Math.round(dusum) + ' dni';
+        warn.style.fontSize = '28px';
+        document.body.appendChild(warn);
 
-      if(TLOT.length != 10) {
-          var warn1 = document.createElement("div");
-          warn1.style.position = 'fixed';
-          warn1.style.top = '160px';
-          warn1.style.left = '10px';
-          warn1.style.color = '#ff00006b';
-          warn1.style.background = '#fffb003b';
-          warn1.innerHTML = '<h2>BŁĘDNY LOT!</h2>';
-          document.body.appendChild(warn1);
-      }
-      if(LotDate.getTime() != SprDPR.getTime()) {
           var warn2 = document.createElement("div");
           warn2.style.position = 'fixed';
           warn2.style.top = '270px';
           warn2.style.left = '10px';
           warn2.style.color = '#ff00006b';
           warn2.style.background = '#fffb003b';
-          warn2.innerHTML = '<h2>BŁĘDNA DATA PRODUKCJI!</h2>';
+          warn2.innerHTML = 'LOT Z DNIA: '+lotISO;
+          warn2.style.fontSize = '28px';
           document.body.appendChild(warn2);
-      }
-      if(((SprMHD.getTime() - SprDPR.getTime())/ 1000 / 60 / 60 / 24)>19 || ((SprMHD.getTime() - SprDPR.getTime())/1000/60/60/24)<5) {
+
+      if(LotDate.getTime() > SprDPR.getTime()) {
           var warn3 = document.createElement("div");
           warn3.style.position = 'fixed';
           warn3.style.top = '380px';
           warn3.style.left = '10px';
           warn3.style.color = '#ff00006b';
           warn3.style.background = '#fffb003b';
-          warn3.innerHTML = '<h2>ZŁA DATA PRZYDATNOŚCI!</h2>';
+          warn3.innerHTML = 'BŁĘDNA DATA PRODUKCJI!';
+          warn3.style.fontSize = '28px';
           document.body.appendChild(warn3);
       }
-      if(TIND === '3.1.1.75' || TIND === '3.1.1.106' || TIND === '3.1.1.109' || TIND === '3.1.1.110' || TIND === '3.1.1.111') {
-          if(TLOT != TATC) {
+
           var warn4 = document.createElement("div");
           warn4.style.position = 'fixed';
           warn4.style.top = '490px';
           warn4.style.left = '10px';
           warn4.style.color = '#ff00006b';
           warn4.style.background = '#fffb003b';
-          warn4.innerHTML = '<h2>TRACEABILITY I<br>LOT RÓŻNIĄ SIĘ!</h2>';
-          document.body.appendChild(warn4);
-          }
-       }
+          warn4.innerHTML = 'TRACEABILITY I LOT RÓŻNIĄ SIĘ!';
+          warn4.style.fontSize = '28px';
+
+    var warn1 = document.createElement("div");
+          warn1.style.position = 'fixed';
+          warn1.style.top = '160px';
+          warn1.style.left = '10px';
+          warn1.style.color = '#ff00006b';
+          warn1.style.background = '#fffb003b';
+          warn1.innerHTML = 'BŁĘDNY LOT!';
+          warn1.style.fontSize = '28px';
+
+if(!(/^[A-Z]{2}/.test(TATC)) && (TLOT != TATC)) {
+        document.body.appendChild(warn4);
     }
-	var iframe = document.createElement("iframe");
-              iframe.style.position = 'fixed';
-              iframe.style.height = '777px';
-              iframe.style.width = '380px';
-			  iframe.style.top = '50px';
-              iframe.style.left = '1480px';
-              document.body.appendChild(iframe);
+        if(!((/^[0-9]{4}/.test(TLOT.substr(-10,4))&&/^[A-Z]{1}/.test(TLOT.substr(-6,1))&&/^[0-9]{5}/.test(TLOT.substr(-5,5)))) || !(TLOT.length === 10 || TLOT.length === 12)) {
+          document.body.appendChild(warn1);
+    }
 
     document.querySelector(".pull-right").setAttribute("onclick", "return false");
     document.querySelector(".pull-right").addEventListener("click", PDFMini, false);
@@ -282,14 +243,22 @@ var CERTPOS  = true;
         }
  	    doc.end();
 
-        if($frame === true){
-            stream.on('finish', function() {
-                iframe.src = stream.toBlobURL('application/pdf');
-            });
-        } else if ($frame != true) {
+        if($frame){
             stream1.on('finish', function() {
                 const url = stream1.toBlobURL('application/pdf');
                 window.open(url);
+            });
+        } else {
+            var iframe = document.createElement("iframe");
+              iframe.style.position = 'fixed';
+              iframe.style.height = '777px';
+              iframe.style.width = '380px';
+			  iframe.style.top = '50px';
+              iframe.style.left = '1480px';
+              document.body.appendChild(iframe);
+
+            stream.on('finish', function() {
+                iframe.src = stream.toBlobURL('application/pdf');
             });
         }
 
