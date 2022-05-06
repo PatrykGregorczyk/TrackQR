@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.05
+// @version     1.07
 // @grant       none
 // ==/UserScript==
 
@@ -90,6 +90,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     $('#container').css("margin-top", "0px");
     $('.col-lg-1').css("position", "absolute").css("top", "-79").css("left", "277");
     $('.col-md-9').css('max-width', '50%');
+    $('.btn-primary').css('position', 'absolute').css('left', '1038');
 
     var STX = String.fromCharCode(2);
     var ETX = String.fromCharCode(3);
@@ -106,8 +107,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var PRODUKT = $("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").text();
 	var CERT = $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").text();
 
-	const dayOfYear = date =>
-    Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+	const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
     var lotISO = LotDate.toISOString();
     LotDate = new Date(lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3],(lotISO[5] + lotISO[6])-1, lotISO[8] + lotISO[9]);
@@ -169,63 +169,33 @@ var CERTPOS  = true;
     document.getElementById("qrcode").getElementsByTagName("img")[0].src = "data:image/svg+xml;base64," + base64Data;
     document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
-        var dusum = ((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24);
-        var warn = document.createElement("div");
-        warn.style.position = 'fixed';
-        warn.style.top = '50px';
-        warn.style.left = '10px';
-        warn.style.color = '#ff00006b';
-        warn.style.background = '#fffb003b';
-        warn.innerHTML = 'OD UBOJU DO KOŃCA MHD: ' + Math.round(dusum) + ' dni';
-        warn.style.fontSize = '28px';
-        document.body.appendChild(warn);
+    var warnboard = document.createElement("div")
+    warnboard.style.position = 'absolute';
+    warnboard.style.top = '50px';
+    warnboard.style.left = '10px';
+    warnboard.style.fontSize = '28px';
+    document.body.appendChild(warnboard);
 
-          var warn2 = document.createElement("div");
-          warn2.style.position = 'fixed';
-          warn2.style.top = '270px';
-          warn2.style.left = '10px';
-          warn2.style.color = '#ff00006b';
-          warn2.style.background = '#fffb003b';
-          warn2.innerHTML = 'LOT Z DNIA: '+lotISO;
-          warn2.style.fontSize = '28px';
-          document.body.appendChild(warn2);
-
-      if(LotDate.getTime() > SprDPR.getTime()) {
-          var warn3 = document.createElement("div");
-          warn3.style.position = 'fixed';
-          warn3.style.top = '380px';
-          warn3.style.left = '10px';
-          warn3.style.color = '#ff00006b';
-          warn3.style.background = '#fffb003b';
-          warn3.innerHTML = 'BŁĘDNA DATA PRODUKCJI!';
-          warn3.style.fontSize = '28px';
-          document.body.appendChild(warn3);
-      }
-
-          var warn4 = document.createElement("div");
-          warn4.style.position = 'fixed';
-          warn4.style.top = '490px';
-          warn4.style.left = '10px';
-          warn4.style.color = '#ff00006b';
-          warn4.style.background = '#fffb003b';
-          warn4.innerHTML = 'TRACEABILITY I LOT RÓŻNIĄ SIĘ!';
-          warn4.style.fontSize = '28px';
-
-    var warn1 = document.createElement("div");
-          warn1.style.position = 'fixed';
-          warn1.style.top = '160px';
-          warn1.style.left = '10px';
-          warn1.style.color = '#ff00006b';
-          warn1.style.background = '#fffb003b';
-          warn1.innerHTML = 'BŁĘDNY LOT!';
-          warn1.style.fontSize = '28px';
-
-if(!(/^[A-Z]{2}/.test(TATC)) && (TLOT != TATC)) {
-        document.body.appendChild(warn4);
+    Warnform('OD UBOJU DO KOŃCA MHD: ' + Math.round(((SprMHD.getTime() - SprDU.getTime())/ 1000 / 60 / 60 / 24)) + ' dni');
+    Warnform('LOT Z DNIA: '+lotISO);
+    if(LotDate.getTime() > SprDPR.getTime()) {
+        Warnform('BŁĘDNA DATA PRODUKCJI!');
     }
-        if(!((/^[0-9]{4}/.test(TLOT.substr(-10,4))&&/^[A-Z]{1}/.test(TLOT.substr(-6,1))&&/^[0-9]{5}/.test(TLOT.substr(-5,5)))) || !(TLOT.length === 10 || TLOT.length === 12)) {
-          document.body.appendChild(warn1);
+    if(!(/^[A-Z]{2}/.test(TATC)) && (TLOT != TATC)) {
+        Warnform('TRACEABILITY I LOT RÓŻNIĄ SIĘ!');
     }
+    if(!((/^[0-9]{4}/.test(TLOT.substr(-10,4))&&/^[A-Z]{1}/.test(TLOT.substr(-6,1))&&/^[0-9]{5}/.test(TLOT.substr(-5,5)))) || !(TLOT.length === 10 || TLOT.length === 12)) {
+        Warnform('BŁĘDNY LOT!');
+    }
+
+        function Warnform ($ihtml) {
+        this.warn = document.createElement("p");
+        this.warn.style.position = 'relative';
+        this.warn.style.color = '#ff00006b';
+        this.warn.style.background = '#fffb003b';
+        this.warn.innerHTML = $ihtml;
+        warnboard.appendChild(this.warn);
+        }
 
     document.querySelector(".pull-right").setAttribute("onclick", "return false");
     document.querySelector(".pull-right").addEventListener("click", PDFMini, false);
@@ -313,3 +283,24 @@ function newButton() {
     nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
     document.body.appendChild(nowbut);
 }
+
+/*function getLot() {
+    var nowbut = document.createElement("button");
+    nowbut.style.font = 'Lato';
+    nowbut.style.position = 'absolute';
+    nowbut.style.top = '3px';
+    nowbut.style.left = '321px';
+    nowbut.style.padding = '0.20rem 0.75rem';
+    nowbut.style.borderRadius = '0.25rem';
+    nowbut.style.border = '1px solid transparent';
+    nowbut.style.fontWeight = 'bold';
+    nowbut.style.textAllign = 'center';
+    nowbut.style.VerticalAllign = 'middle';
+    nowbut.innerText = 'Pobierz z lotu';
+    nowbut.color = 'red';
+    nowbut.style.fontSize = '12px';
+    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
+    nowbut.style.cursor = "pointer";
+    nowbut.onclick = function() { var lotTemp = document.getElementById('b_lot_nr').value    };
+    document.body.appendChild(nowbut);
+}*/
