@@ -4,15 +4,65 @@
 // @include     *traceability24.eu*
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
+// @require     https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.07
+// @version     1.10
+// @run-at      document-start
 // @grant       none
 // ==/UserScript==
 
- //   var teraz = new Date(20+TLOTa.substr(-2,2), 0,TLOTa.substr(-5,3));
+/********* Don't change month ***********/
+
+Date.isLeapYear = function (year) {
+    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
+};
+
+Date.getDaysInMonth = function (year, month) {
+    return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+};
+
+Date.prototype.isLeapYear = function () {
+    return Date.isLeapYear(this.getFullYear());
+};
+
+Date.prototype.getDaysInMonth = function () {
+    return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+};
+
+Date.prototype.addMonths = function (value) {
+    var n = this.getDate();
+    this.setDate(1);
+    this.setMonth(this.getMonth() + value);
+    this.setDate(Math.min(n, this.getDaysInMonth()));
+    return this;
+};
+
+/***************************************/
+
+
+$.fn.datepicker.noConflict = function(){
+   $.fn.datepicker = old;
+   return this;
+};
+
+$(function() {
+            $( ".datepicker" ).datepicker(
+                {
+                  todayHighlight: true,
+                  autoclose: true,
+                  format: 'yyyy-mm-dd',
+                  changeYear: true,
+                  yearRange : 'c-5:c+5'
+                 }
+             );
+     	});
 
 const COPIES = 3;
+
+window.addEventListener ("load", DOM_ContentReady);
+
+function DOM_ContentReady () {
 
 $('.navbar').css("height", "0");
 $('li.nav-item:nth-child(1)').remove();
@@ -34,11 +84,22 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
 }
     if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/create'){
         $('div.row:nth-child(1)').remove();
-        $('#b_prod_date').attr("class", "form-control");
+        $('hr').css('border-top', '0');
+        $('.col-md-8').css('top', '20');
+
+        getLotButton('Pobierz z lotu', $('div.row:nth-child(6) > div:nth-child(1)'), $('#b_prod_date'));
+
+        changeDateButton('+ 12m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 12);
+        changeDateButton('+ 15m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 15);
+        changeDateButton('+ 18m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 18);
+        changeDateButton('+ 24m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 24);
+
+        getLotButton('Pobierz z lotu', $('div.row:nth-child(6) > div:nth-child(3)'), $('#b_freezing_date'));
+
     }
 
 if(window.location.href.toString() === 'https://traceability24.eu/batches' || window.location.href.toString().substr(0,39) === 'https://traceability24.eu/batches/index'){
- console.log("hej");
+
     $('div.row:nth-child(1)').remove();
 
     for(i = 0; i < document.body.getElementsByClassName('form-group').length-2; i++){
@@ -62,8 +123,6 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
 
     newButton();
 }
-
-
 
 if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/batches/view'){
     $('div.col-lg-1:nth-child(1)').remove();
@@ -91,6 +150,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     $('.col-lg-1').css("position", "absolute").css("top", "-79").css("left", "277");
     $('.col-md-9').css('max-width', '50%');
     $('.btn-primary').css('position', 'absolute').css('left', '1038');
+    $('a.card-link:nth-child(1)').css('margin-left', '1.25rem');
 
     var STX = String.fromCharCode(2);
     var ETX = String.fromCharCode(3);
@@ -255,52 +315,105 @@ var CERTPOS  = true;
                .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
             if(TGGN){
                 doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
+            } else if (TGGN == "" && TDMR) {
+                doc.text('Data mrożenia: '+TDMR, 67, 48, {height:0, width:230});
             }
-
             if(TLOT != TATC){
                 doc.text('Traceability: '+TATC,10, 68, {height:0});
+            } else if (TGGN && TDMR && TLOT == TATC) {
+                doc.text('Data mrożenia: '+TDMR,10, 68, {height:0});
             }
+
        }
     }
 }
+
 function newButton() {
     var nowbut = document.createElement("button");
     nowbut.style.font = 'Lato';
     nowbut.style.position = 'absolute';
-    nowbut.style.top = '3px';
-    nowbut.style.left = '321px';
-    nowbut.style.padding = '0.20rem 0.75rem';
+    nowbut.style.top = '3.5px';
+    nowbut.style.left = '340px';
+    nowbut.style.padding = '0.18rem 0.78rem';
+    nowbut.style.float = 'left';
     nowbut.style.borderRadius = '0.25rem';
     nowbut.style.border = '1px solid transparent';
-    nowbut.style.fontWeight = 'bold';
     nowbut.style.textAllign = 'center';
     nowbut.style.VerticalAllign = 'middle';
     nowbut.innerText = 'New';
-    nowbut.color = 'red';
+    nowbut.style.backgroundColor = '#e83e8c';
+    nowbut.style.color = 'white';
     nowbut.style.fontSize = '12px';
-    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
     nowbut.style.cursor = "pointer";
     nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
     document.body.appendChild(nowbut);
 }
+    function cngDate (input, range) {
+    var dataLot = $('#b_freezeing_date').val();
+    dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
+    var newDataLot = dataLot.addMonths(range);
+    input.focus();
+    input.datepicker('update', newDataLot);
+};
 
-/*function getLot() {
-    var nowbut = document.createElement("button");
-    nowbut.style.font = 'Lato';
-    nowbut.style.position = 'absolute';
-    nowbut.style.top = '3px';
-    nowbut.style.left = '321px';
-    nowbut.style.padding = '0.20rem 0.75rem';
-    nowbut.style.borderRadius = '0.25rem';
-    nowbut.style.border = '1px solid transparent';
-    nowbut.style.fontWeight = 'bold';
-    nowbut.style.textAllign = 'center';
-    nowbut.style.VerticalAllign = 'middle';
-    nowbut.innerText = 'Pobierz z lotu';
-    nowbut.color = 'red';
-    nowbut.style.fontSize = '12px';
-    nowbut.style.transition = 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out';
-    nowbut.style.cursor = "pointer";
-    nowbut.onclick = function() { var lotTemp = document.getElementById('b_lot_nr').value    };
-    document.body.appendChild(nowbut);
-}*/
+function changeDateButton(name, position, input, range) {
+    var databut = document.createElement("button");
+    databut.type = 'button';
+    databut.tabIndex = '-1';
+    databut.style.font = 'Lato';
+    databut.style.position = 'inherit';
+    databut.style.padding = '0.20rem 0.75rem';
+    databut.style.borderRadius = '0.25rem';
+    databut.style.border = '1px solid transparent';
+    databut.style.marginRight = '10px';
+    databut.style.fontWeight = 'bold';
+    databut.style.textAllign = 'center';
+    databut.style.VerticalAllign = 'middle';
+    databut.innerText = name;
+    databut.style.backgroundColor = '#6610f2';
+    databut.style.color = 'white';
+    databut.style.fontSize = '12px';
+    databut.style.cursor = "pointer";
+    databut.onclick = function () {
+    var dataLot = $('#b_freezing_date').val();
+        if (dataLot != "") {
+            dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
+            var newDataLot = dataLot.addMonths(range);
+            input.focus();
+            input.datepicker('update', newDataLot);
+        }
+    };
+    position.append(databut);
+}
+
+function getLotButton(name, position, input) {
+    var databut = document.createElement("button");
+    databut.type = 'button';
+    databut.tabIndex = '-1';
+    databut.style.font = 'Lato';
+    databut.style.position = 'inherit';
+    databut.style.padding = '0.20rem 0.75rem';
+    databut.style.borderRadius = '0.25rem';
+    databut.style.border = '1px solid transparent';
+    databut.style.marginRight = '10px';
+    databut.style.fontWeight = 'bold';
+    databut.style.textAllign = 'center';
+    databut.style.VerticalAllign = 'middle';
+    databut.innerText = name;
+    databut.style.backgroundColor = '#6610f2';
+    databut.style.color = 'white';
+    databut.style.fontSize = '12px';
+    databut.style.cursor = "pointer";
+    databut.onclick = function () {
+        var dataLot = $('#b_lot_nr').val();
+        if (dataLot != "") {
+        dataLot = new Date(20+dataLot.substr(-2,2), 0,dataLot.substr(-5,3),2);
+        input.focus();
+        input.datepicker('update', dataLot);
+        } else {
+            $('#b_lot_nr').focus();
+        }
+    };
+    position.append(databut);
+}
+}
