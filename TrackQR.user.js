@@ -2,61 +2,14 @@
 // @name        TrackQR
 // @namespace   https://traceability24.eu/
 // @include     *traceability24.eu*
-// @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @require     https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.10
+// @version     1.11
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
-
-/********* Don't change month ***********/
-
-Date.isLeapYear = function (year) {
-    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
-};
-
-Date.getDaysInMonth = function (year, month) {
-    return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
-};
-
-Date.prototype.isLeapYear = function () {
-    return Date.isLeapYear(this.getFullYear());
-};
-
-Date.prototype.getDaysInMonth = function () {
-    return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
-};
-
-Date.prototype.addMonths = function (value) {
-    var n = this.getDate();
-    this.setDate(1);
-    this.setMonth(this.getMonth() + value);
-    this.setDate(Math.min(n, this.getDaysInMonth()));
-    return this;
-};
-
-/***************************************/
-
-
-$.fn.datepicker.noConflict = function(){
-   $.fn.datepicker = old;
-   return this;
-};
-
-$(function() {
-            $( ".datepicker" ).datepicker(
-                {
-                  todayHighlight: true,
-                  autoclose: true,
-                  format: 'yyyy-mm-dd',
-                  changeYear: true,
-                  yearRange : 'c-5:c+5'
-                 }
-             );
-     	});
 
 const COPIES = 3;
 
@@ -64,43 +17,52 @@ window.addEventListener ("load", DOM_ContentReady);
 
 function DOM_ContentReady () {
 
-$('.navbar').css("height", "0");
-$('li.nav-item:nth-child(1)').remove();
+    document.querySelector('.navbar').style.height = 0;
+    document.querySelector('li.nav-item:nth-child(1)').remove();
 
 if(window.location.href.toString() === 'https://traceability24.eu/deliveries' || window.location.href.toString().substr(0,42) === 'https://traceability24.eu/deliveries/index'){
-    $('div.row:nth-child(1)').remove();
-    $('div.row:nth-child(3)').css("background", "");
-    $('div.row:nth-child(3)').css("top", "12");
-    $('div.col-lg-2:nth-child(3)').css("top", "-22");
-    $('div.col-lg-12:nth-child(1)').css("top", "-30");
 
-    for(var i = 0; i < document.body.getElementsByClassName('form-group').length-2; i++){
-    document.body.getElementsByClassName('form-group')[i].children[1].setAttribute("placeholder", document.body.getElementsByClassName('form-group')[i].children[0].firstChild.data);
+    document.querySelector('div.row:nth-child(1)').remove();
+
+    document.querySelector('div.row:nth-child(3)').style.background = '';
+    document.querySelector('div.row:nth-child(3)').style.top = '12';
+
+    document.querySelector('div.col-lg-2:nth-child(3)').style.top = '-22';
+
+    document.querySelector('div.col-lg-12:nth-child(1)').style.top = '-30';
+
+    for(var i = 0; i < document.getElementsByClassName('form-group').length-2; i++){
+    document.getElementsByClassName('form-group')[i].children[1].setAttribute("placeholder", document.body.getElementsByClassName('form-group')[i].children[0].firstChild.data);
     }
     for(i = 1; i < 6; i++){
-    document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)').remove();
+    document.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)').remove();
     }
 
 }
     if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/create'){
-        $('div.row:nth-child(1)').remove();
-        $('hr').css('border-top', '0');
-        $('.col-md-8').css('top', '20');
+        document.querySelector('div.row:nth-child(1)').remove();
+        document.querySelector('hr').style.borderTop = '0';
+        document.querySelector('.col-md-8').style.top = '20';
 
-        getLotButton('Pobierz z lotu', $('div.row:nth-child(6) > div:nth-child(1)'), $('#b_prod_date'));
+        funcButton('Pobierz z lotu', document.querySelector('div.row:nth-child(6) > div:nth-child(1)'), 1);
+        document.getElementById("button1").addEventListener("click", () => getLotBut("#b_prod_date"));
 
-        changeDateButton('+ 12m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 12);
-        changeDateButton('+ 15m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 15);
-        changeDateButton('+ 18m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 18);
-        changeDateButton('+ 24m', $('div.row:nth-child(6) > div:nth-child(2)'), $('#b_exp_date'), 24);
+        funcButton('+ 12m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 2)
+        document.getElementById("button2").addEventListener("click", () => cngDate(12));
+        funcButton('+ 15m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 3);
+        document.getElementById("button3").addEventListener("click", () => cngDate(15));
+        funcButton('+ 18m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 4);
+        document.getElementById("button4").addEventListener("click", () => cngDate(18));
+        funcButton('+ 24m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 5);
+        document.getElementById("button5").addEventListener("click", () => cngDate(24));
 
-        getLotButton('Pobierz z lotu', $('div.row:nth-child(6) > div:nth-child(3)'), $('#b_freezing_date'));
-
+        funcButton('Pobierz z lotu', document.querySelector('div.row:nth-child(6) > div:nth-child(3)'), 6);
+        document.getElementById("button6").addEventListener("click", () => getLotBut("#b_freezing_date"));
     }
 
 if(window.location.href.toString() === 'https://traceability24.eu/batches' || window.location.href.toString().substr(0,39) === 'https://traceability24.eu/batches/index'){
 
-    $('div.row:nth-child(1)').remove();
+    document.querySelector('div.row:nth-child(1)').remove();
 
     for(i = 0; i < document.body.getElementsByClassName('form-group').length-2; i++){
     document.body.getElementsByClassName('form-group')[i].children[1].setAttribute("placeholder", document.body.getElementsByClassName('form-group')[i].children[0].innerHTML);
@@ -111,61 +73,122 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
         document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(2) > div:nth-child(1) > label:nth-child(1)').remove();
         }
     }
-    $('.col-lg-2').css('max-width', '11%');
-    $('div.row:nth-child(3)').css("position", "absolute").css("background", "");
-    $('div.col-lg-2:nth-child(1) > div:nth-child(2) > div:nth-child(1)').css("left", "990").css("position", "absolute").css("top", "0").css("width", "84.5%");
-    $('div.col-lg-2:nth-child(2) > div:nth-child(2) > div:nth-child(1)').css("left", "990").css("position", "absolute").css("top", "0").css("width", "84.5%");
-    $('div.col-lg-2:nth-child(6)').css("left", "394").css("top", "-24");
-    $('div.col-lg-12:nth-child(1)').css("top", "35");
-    $('.table').css("position", "relative").css("top", "-40");
-    $('button.btn-info:nth-child(3)').css("position", "relative").css("top", "-55");
-    $('body > p:nth-child(3) > small:nth-child(1)').remove();
+    document.querySelector('div.row:nth-child(3)').style.maxWidth = '67%';
+    document.querySelector('div.row:nth-child(3)').style.position = 'absolute';
+    document.querySelector('div.row:nth-child(3)').style.background = '';
+
+    for (i = 1; i<=2; i++) {
+    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.left = '997';
+    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.position = 'absolute';
+    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.top = '0';
+    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.width = '84.5%';
+    }
+
+    document.querySelector('div.col-lg-2:nth-child(6)').style.left = '394';
+    document.querySelector('div.col-lg-2:nth-child(6)').style.top = '-24';
+
+    document.querySelector('div.col-lg-12:nth-child(1)').style.top = '35';
+
+    document.querySelector('.table').style.position = 'relative';
+    document.querySelector('.table').style.top = '-40';
+
+    document.querySelector('button.btn-info:nth-child(3)').style.position = 'relative';
+    document.querySelector('button.btn-info:nth-child(3)').style.top = '-55';
+
+    document.querySelector('body > p:nth-child(3) > small:nth-child(1)').remove();
 
     newButton();
 }
 
 if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/batches/view'){
-    $('div.col-lg-1:nth-child(1)').remove();
-    $('div.card-body:nth-child(4)').css("position", "absolute").css("left", "-100").css("top", "-100");
-    $('.col-lg-12').css("margin-bottom", "-28");
-    $('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(1)').css("display", "none");
-    $('div.card-body:nth-child(3)').css("height", "83");
-    $('div.col-lg-4:nth-child(2)').css("height", "0");
-    $('div.card-body:nth-child(2) > div:nth-child(1)').css("margin-bottom", "-35");
-    $('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').css("margin-top", "-40").css("transform", "scale(0.7)");
-    $('.col-lg-9').remove();
-    $('.card-footer > div:nth-child(1)').css("width", "100%");
-    $('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2)').css("position", "absolute").css("top", "1").css("left", "215");
-    $('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(1)').css("position", "absolute").css("left", "415").css("top", "1");
-    $('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').css("position", "absolute").css("top", "0").css("left", "615");
-    $('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').css("position", "absolute").css("left", "15");
-    $('.col-lg-4').css("max-width", "100%").css("flex", "0 0 100%");
-    $('hr.my-4:nth-child(10)').remove();
-    $('div.row:nth-child(10)').remove();
-    $('div.row:nth-child(9)').css("margin-bottom", "12");
-    $('.card-footer').css("position", "absolute").css("top", "-92").css("background-color", "transparent").css("color", "white !important").css("left", "369");
-    $('.btn').css("line-height", "1");
-    $('.card').css("padding", "0");
-    $('#container').css("margin-top", "0px");
-    $('.col-lg-1').css("position", "absolute").css("top", "-79").css("left", "277");
-    $('.col-md-9').css('max-width', '50%');
-    $('.btn-primary').css('position', 'absolute').css('left', '1038');
-    $('a.card-link:nth-child(1)').css('margin-left', '1.25rem');
 
-    var STX = String.fromCharCode(2);
-    var ETX = String.fromCharCode(3);
-    var SEP = String.fromCharCode(10);
-    var TIND = $(".milcode").text();
-    var TMHD = $("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text();
-    var TDMR = $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text();
-    var TLOT = document.getElementById("qrdata").value;
-    var TATC = $("h5.text-warning").text();
-    var TDUB = $("h5.text-success").text();
-    var TGGN = $("div.row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").text();
-    var DPR = $("h5.text-info").text();
-    var PARTIA = $(".card-header > strong:nth-child(1)").text();
-    var PRODUKT = $("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").text();
-	var CERT = $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").text();
+
+    document.querySelector('div.col-lg-1:nth-child(1)').remove();
+
+    document.querySelector('div.card-body:nth-child(4)').style.position = "absolute";
+    document.querySelector('div.card-body:nth-child(4)').style.left = "-100px";
+    document.querySelector('div.card-body:nth-child(4)').style.top = "-100px";
+
+    document.querySelector('.col-md-offset-4').style.marginTop = "50";
+
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(1)').style.display = "none";
+
+    document.querySelector('div.card-body:nth-child(3)').style.height = "83";
+
+    document.querySelector('div.col-lg-4:nth-child(2)').style.height = "0";
+
+    document.querySelector('div.card-body:nth-child(2) > div:nth-child(1)').style.marginBottom = "-35";
+
+    document.querySelector('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').style.marginTop = "-40";
+    document.querySelector('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').style.transform = "scale(0.7)";
+
+    document.querySelector('.col-lg-9').remove();
+
+    document.querySelector('.card-footer > div:nth-child(1)').style.width = "100%";
+
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2)').style.position = "absolute";
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2)').style.top = "1";
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2)').style.left = "215";
+
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(1)').style.position = "absolute";
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(1)').style.left = "415";
+    document.querySelector('div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(1)').style.top = "1";
+
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.position = "absolute";
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.top = "0";
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.left = "615";
+
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').style.position = "absolute";
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').style.left = "15";
+
+    document.querySelector('.col-lg-4').style.maxWidth = "100%";
+    document.querySelector('.col-lg-4').style.flex = "0 0 100%";
+
+    document.querySelector('hr.my-4:nth-child(10)').remove();
+
+    document.querySelector('div.row:nth-child(10)').remove();
+
+    document.querySelector('div.row:nth-child(9)').style.marginBottom = "12";
+
+    document.querySelector('.card-footer').style.position = "absolute";
+    document.querySelector('.card-footer').style.top = "-92";
+    document.querySelector('.card-footer').style.backgroundColor = "transparent";
+    document.querySelector('.card-footer').style.color = "white !important";
+    document.querySelector('.card-footer').style.left = "369";
+
+    document.querySelectorAll('.btn').forEach(el => el.style.lineHeight = 1);
+
+    document.querySelector('.card').style.padding = "0";
+
+    document.querySelector('#container').style.marginTop = "0px";
+
+    document.querySelector('.col-lg-1').style.position = "absolute";
+    document.querySelector('.col-lg-1').style.top = "-79";
+    document.querySelector('.col-lg-1').style.left = "277";
+
+    document.querySelector('.col-md-9').style.maxWidth = '50%';
+
+    document.querySelector('a.card-link:nth-child(1)').style.marginLeft = '1.25rem';
+
+   for(i = 3; document.querySelector('div.row:nth-child('+i+')'); i+=2) {
+        document.querySelector('div.row:nth-child('+i+')').style.marginTop = '-10';
+        document.querySelector('div.row:nth-child('+i+')').style.marginBottom = '-25';
+    }
+
+    const STX = String.fromCharCode(2);
+    const ETX = String.fromCharCode(3);
+    const SEP = String.fromCharCode(10);
+    var TIND = document.querySelector(".milcode").outerText;
+    var TMHD = document.querySelector("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").outerText;
+    var TDMR = document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").outerText;
+    var TLOT = document.querySelector("#qrdata").value;
+    var TATC = document.querySelector("h5.text-warning").outerText;
+    var TDUB = document.querySelector("h5.text-success").outerText;
+    var TGGN = document.querySelector("div.row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").outerText;
+    var DPR = document.querySelector("h5.text-info").outerText;
+    var PARTIA = document.querySelector(".card-header > strong:nth-child(1)").outerText;
+    var PRODUKT = document.querySelector("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").outerText;
+	var CERT = document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
 
 	const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
@@ -181,26 +204,32 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
 
    if(TDMR === ""){
-       $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
+       document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
    } else {
        TDMR = TDMR[8] + TDMR[9] + '.' + TDMR[5] + TDMR[6] + '.' + TDMR[0] + TDMR[1] + TDMR[2] + TDMR[3];
    }
 //    $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(3)").after($("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)"));
  //   $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(3)").remove();
-var CERTPOS  = true;
-    for(i = 2;CERTPOS != ""; i++){
-    CERTPOS = $(`div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(${i})`).text();
-    $(`div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(${i})`).css("position", "absolute").css("left", 15+60*(i-2)).css("top", $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").position.top);
+
+   for(i = 2; document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
+    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.position = "absolute";
+    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.left = 15+60*(i-2);
+    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.top =
+        document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").style.top;
     }
 
-    $("#qrdata")[0].outerHTML = '<div class="text-info" id="qrdata"><b>'+TLOT+'</b>';
-    $('.my-4').css("margin-bottom", "0");
-    $('#container > p:nth-child(2)').remove();
-    $('div.row > div.col-lg-6').css("height", "30");
-    $("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text(TMHD);
-    $("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").text(TDMR);
-    $("h5.text-success").text(TDUB);
-    $("h5.text-info").text(DPR);
+    document.querySelector("#qrdata").outerHTML = '<div class="text-info" id="qrdata"><b>'+TLOT+'</b>';
+    document.querySelector('.my-4').style.marginBottom = "0";
+    document.querySelector('#container > p:nth-child(2)').remove();
+    document.querySelector('div.row > div.col-lg-6').style.height = "30";
+    document.querySelector("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").innerText = TMHD;
+
+    if (document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)")) {
+    document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").innerText = TDMR;
+    }
+
+    document.querySelector("h5.text-success").innerText = TDUB;
+    document.querySelector("h5.text-info").innerText = DPR;
 
 
     var svgNode = QRCode({
@@ -217,9 +246,6 @@ var CERTPOS  = true;
     });
 
     var s = svgNode.getElementsByTagName("path")[0].getAttribute('d');
-
-    $('.col-md-7').css("max-width", "50%");
-    $('.col-md-offset-4').css("margin-top", "50");
 
     newButton();
     PDFMini(false);
@@ -329,91 +355,67 @@ var CERTPOS  = true;
 }
 
 function newButton() {
-    var nowbut = document.createElement("button");
-    nowbut.style.font = 'Lato';
-    nowbut.style.position = 'absolute';
-    nowbut.style.top = '3.5px';
-    nowbut.style.left = '340px';
-    nowbut.style.padding = '0.18rem 0.78rem';
-    nowbut.style.float = 'left';
-    nowbut.style.borderRadius = '0.25rem';
-    nowbut.style.border = '1px solid transparent';
-    nowbut.style.textAllign = 'center';
-    nowbut.style.VerticalAllign = 'middle';
-    nowbut.innerText = 'New';
-    nowbut.style.backgroundColor = '#e83e8c';
-    nowbut.style.color = 'white';
-    nowbut.style.fontSize = '12px';
-    nowbut.style.cursor = "pointer";
-    nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
+    this.nowbut = document.createElement("button");
+    this.nowbut.style.font = 'Lato';
+    this.nowbut.style.position = 'absolute';
+    this.nowbut.style.top = '3.5px';
+    this.nowbut.style.left = '340px';
+    this.nowbut.style.padding = '0.18rem 0.78rem';
+    this.nowbut.style.float = 'left';
+    this.nowbut.style.borderRadius = '0.25rem';
+    this.nowbut.style.border = '1px solid transparent';
+    this.nowbut.style.textAllign = 'center';
+    this.nowbut.style.VerticalAllign = 'middle';
+    this.nowbut.innerText = 'New';
+    this.nowbut.style.backgroundColor = '#e83e8c';
+    this.nowbut.style.color = 'white';
+    this.nowbut.style.fontSize = '12px';
+    this.nowbut.style.cursor = "pointer";
+    this.nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
     document.body.appendChild(nowbut);
 }
-    function cngDate (input, range) {
-    var dataLot = $('#b_freezeing_date').val();
-    dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
-    var newDataLot = dataLot.addMonths(range);
-    input.focus();
-    input.datepicker('update', newDataLot);
-};
 
-function changeDateButton(name, position, input, range) {
-    var databut = document.createElement("button");
-    databut.type = 'button';
-    databut.tabIndex = '-1';
-    databut.style.font = 'Lato';
-    databut.style.position = 'inherit';
-    databut.style.padding = '0.20rem 0.75rem';
-    databut.style.borderRadius = '0.25rem';
-    databut.style.border = '1px solid transparent';
-    databut.style.marginRight = '10px';
-    databut.style.fontWeight = 'bold';
-    databut.style.textAllign = 'center';
-    databut.style.VerticalAllign = 'middle';
-    databut.innerText = name;
-    databut.style.backgroundColor = '#6610f2';
-    databut.style.color = 'white';
-    databut.style.fontSize = '12px';
-    databut.style.cursor = "pointer";
-    databut.onclick = function () {
-    var dataLot = $('#b_freezing_date').val();
-        if (dataLot != "") {
+function funcButton(name, position, ajdi) {
+    this.databut = document.createElement("button");
+    this.databut.id = 'button'+ajdi;
+    this.databut.type = 'button';
+    this.databut.tabIndex = '-1';
+    this.databut.style.font = 'Lato';
+    this.databut.style.position = 'inherit';
+    this.databut.style.padding = '0.20rem 0.75rem';
+    this.databut.style.borderRadius = '0.25rem';
+    this.databut.style.border = '1px solid transparent';
+    this.databut.style.marginRight = '10px';
+    this.databut.style.fontWeight = 'bold';
+    this.databut.style.textAllign = 'center';
+    this.databut.style.VerticalAllign = 'middle';
+    this.databut.innerText = name;
+    this.databut.style.backgroundColor = '#6610f2';
+    this.databut.style.color = 'white';
+    this.databut.style.fontSize = '12px';
+    this.databut.style.cursor = "pointer";
+    position.append(this.databut);
+}
+        function cngDate (range) {
+        if (document.querySelector("#b_freezing_date").value) {
+            var dataLot = document.querySelector("#b_freezing_date").value
             dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
             var newDataLot = dataLot.addMonths(range);
-            input.focus();
-            input.datepicker('update', newDataLot);
-        }
+            $('#b_exp_date').datepicker('update', newDataLot);
+        } else if (document.querySelector("#b_lot_nr").value) {
+            getLotBut("#b_freezing_date");
+            cngDate(range);
+            } else {
+                 document.querySelector("#b_lot_nr").focus();
+            }
     };
-    position.append(databut);
-}
-
-function getLotButton(name, position, input) {
-    var databut = document.createElement("button");
-    databut.type = 'button';
-    databut.tabIndex = '-1';
-    databut.style.font = 'Lato';
-    databut.style.position = 'inherit';
-    databut.style.padding = '0.20rem 0.75rem';
-    databut.style.borderRadius = '0.25rem';
-    databut.style.border = '1px solid transparent';
-    databut.style.marginRight = '10px';
-    databut.style.fontWeight = 'bold';
-    databut.style.textAllign = 'center';
-    databut.style.VerticalAllign = 'middle';
-    databut.innerText = name;
-    databut.style.backgroundColor = '#6610f2';
-    databut.style.color = 'white';
-    databut.style.fontSize = '12px';
-    databut.style.cursor = "pointer";
-    databut.onclick = function () {
-        var dataLot = $('#b_lot_nr').val();
-        if (dataLot != "") {
-        dataLot = new Date(20+dataLot.substr(-2,2), 0,dataLot.substr(-5,3),2);
-        input.focus();
-        input.datepicker('update', dataLot);
+            function getLotBut (inputeg) {
+        if (document.querySelector("#b_lot_nr").value) {
+        var dataLot = document.querySelector("#b_lot_nr").value;
+            dataLot = new Date(20 + dataLot.substr(-2,2), 0, dataLot.substr(-5,3), 2);
+            $(inputeg).datepicker('update', dataLot);
         } else {
-            $('#b_lot_nr').focus();
+            document.querySelector("#b_lot_nr").focus();
         }
     };
-    position.append(databut);
-}
 }
