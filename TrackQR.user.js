@@ -102,6 +102,10 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
 
 if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/batches/view'){
 
+    if (document.querySelector('.btn-primary')) {
+    document.querySelector('.btn-primary').style.position = "absolute";
+    document.querySelector('.btn-primary').style.left = "980";
+}
 
     document.querySelector('div.col-lg-1:nth-child(1)').remove();
 
@@ -208,8 +212,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
    } else {
        TDMR = TDMR[8] + TDMR[9] + '.' + TDMR[5] + TDMR[6] + '.' + TDMR[0] + TDMR[1] + TDMR[2] + TDMR[3];
    }
-//    $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(3)").after($("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)"));
- //   $("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(3)").remove();
 
    for(i = 2; document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
     document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.position = "absolute";
