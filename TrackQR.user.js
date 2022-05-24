@@ -2,16 +2,15 @@
 // @name        TrackQR
 // @namespace   https://traceability24.eu/
 // @include     *traceability24.eu*
+// @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.11
+// @version     1.12
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
-
-const COPIES = 3;
 
 window.addEventListener ("load", DOM_ContentReady);
 
@@ -179,6 +178,10 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         document.querySelector('div.row:nth-child('+i+')').style.marginBottom = '-25';
     }
 
+    if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
+        document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = " "; // hard space
+    }
+
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
     const SEP = String.fromCharCode(10);
@@ -241,7 +244,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 	      + STX + 'UTATC' + SEP + TATC + ETX
 	 	  + STX + 'UTDUB' + SEP + TDUB + ETX
 		  + STX + 'UTGGN' + SEP + TGGN + ETX
-  	,pad :	 0
+  	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
     ,vrb :   1
@@ -250,7 +253,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var s = svgNode.getElementsByTagName("path")[0].getAttribute('d');
 
     newButton();
-    PDFMini(false);
 
     var serializedSVG = new XMLSerializer().serializeToString(svgNode);
     var base64Data = window.btoa(serializedSVG);
@@ -278,125 +280,184 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
         function Warnform ($ihtml) {
         this.warn = document.createElement("p");
-        this.warn.style.position = 'relative';
-        this.warn.style.color = '#ff00006b';
-        this.warn.style.background = '#fffb003b';
-        this.warn.innerHTML = $ihtml;
-        warnboard.appendChild(this.warn);
+        warn.style.position = 'relative';
+        warn.style.color = '#ff00006b';
+        warn.style.background = '#fffb003b';
+        warn.innerHTML = $ihtml;
+        warnboard.appendChild(warn);
         }
 
-    document.querySelector(".pull-right").setAttribute("onclick", "return false");
-    document.querySelector(".pull-right").addEventListener("click", PDFMini, false);
+       var trackCopies = document.createElement('input');
+    trackCopies.id = 'lcopies';
+    trackCopies.setAttribute('type', 'number');
+    trackCopies.setAttribute('min', '1');
+    trackCopies.setAttribute('max', '10');
+    trackCopies.innerHtml = "xD";
+    trackCopies.style.width = "50px";
+    trackCopies.defaultValue = 3;
+    trackCopies.style.position = "absolute";
+    trackCopies.style.top = "150px";
+    trackCopies.style.left = "1450px";
+    document.body.appendChild(trackCopies);
 
-    function PDFMini($frame) {
-        var doc = new PDFDocument({size: [79*2.83237976548, 49*2.83237976548], bufferPages: true});
-            var stream = doc.pipe(blobStream());
-            const stream1 = doc.pipe(blobStream());
-
-        for(i=1;i<=COPIES;i++) {
-            TraceMini();
-            if(i<COPIES){
-            doc.addPage();
-            }
-        }
- 	    doc.end();
-
-        if($frame){
-            stream1.on('finish', function() {
-                const url = stream1.toBlobURL('application/pdf');
-                window.open(url);
-            });
+        var enableQr = document.createElement('input');
+    enableQr.setAttribute('type', 'checkbox');
+    enableQr.defaultChecked = true;
+    enableQr.id = 'enableqrcb';
+    enableQr.style.position = "absolute";
+    enableQr.style.top = "110px";
+    enableQr.style.left = "1450px";
+    enableQr.onchange = function() {if (enableQr.checked) {
+            makeTrackBoard(true);
+        document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
         } else {
-            var iframe = document.createElement("iframe");
-              iframe.style.position = 'fixed';
-              iframe.style.height = '777px';
-              iframe.style.width = '380px';
-			  iframe.style.top = '50px';
-              iframe.style.left = '1480px';
-              document.body.appendChild(iframe);
-
-            stream.on('finish', function() {
-                iframe.src = stream.toBlobURL('application/pdf');
-            });
+        makeTrackBoard(false);
+            document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
         }
+    }
+    document.body.appendChild(enableQr);
 
-        function TraceMini() {
-            doc.registerFont('pgb', new Buffer(fontpgb, "base64"))
-               .registerFont('abl', new Buffer(fontabl, "base64"))
-               .save()
-               .translate(10, 12)
-               .scale(1.2)
-               .path(s, 10, 10)
-               .fill('black', 'even-odd')
-               .restore()
-               .font('abl')
-               .fontSize(11)
-               .text(PARTIA,67, 9, {height:0, width:230})
-               .font('pgb')
-               .text('Data uboju: '+TDUB, 67, 29, {height:0, width:230})
-               .text('Indeks: '+TIND, 10, 84, {height:0})
-               .text('MHD:', 10, 101, {height:0})
-               .font('abl')
-               .text(TMHD,42, 98.3, {height:0})
-               .font('pgb')
-               .text('LOT: '+TLOT,10, 117, {height:0})
-               .fontSize(7).text('Data Produkcji: ',56*2.83237976548,39*2.83237976548,{height:0, width:70}).fontSize(9.9).text(DPR, 56*2.83237976548,42*2.83237976548,{height:0, width:70});
-            if(TGGN){
-                doc.text('GGN: '+TGGN, 67, 48, {height:0, width:230});
+    var labelForCb = document.createElement('p');
+    labelForCb.style.position = "absolute";
+    labelForCb.innerHTML = 'QRCode (klawisz q - zmiana)';
+    labelForCb.style.top = "106px";
+    labelForCb.style.left = "1470px";
+    document.body.appendChild(labelForCb);
+
+    var labelForCopy = document.createElement('p');
+    labelForCopy.style.position = "absolute";
+    labelForCopy.innerHTML = 'Ilość kopii (strzałki - zmiana; enter - drukuj)';
+    labelForCopy.style.top = "151px";
+    labelForCopy.style.left = "1510px";
+    document.body.appendChild(labelForCopy);
+
+function makeTrackBoard (qr) {
+    if(document.querySelector("#printtrack")) {
+        document.querySelector("#printtrack").remove();
+    }
+
+    var trackBoard = document.createElement("div");
+    trackBoard.id = "printtrack";
+    trackBoard.style.fontSize = "0px";
+    trackBoard.style.position = "absolute";
+    trackBoard.style.top = "200px";
+    trackBoard.style.left = "1450px";
+    trackBoard.style.width = "78mm";
+    trackBoard.style.height = "50mm";
+    trackBoard.style.border = "1px solid grey"
+    trackBoard.style.borderRadius = "8px";
+    document.body.appendChild(trackBoard);
+
+    var trackLabel = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    trackLabel.style.fontSize = "0px";
+    trackLabel.style.position = "relative";
+    trackLabel.style.left = "0mm";
+    trackLabel.style.top = "0mm";
+    trackLabel.style.width = "78mm";
+    trackLabel.style.height = "50mm";
+    trackBoard.appendChild(trackLabel);
+
+    if(qr) {
+        var trackPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        trackPath.setAttribute('d', s);
+        trackPath.setAttribute('transform', 'scale(1.7), translate(7,9)');
+        trackPath.setAttribute('fill','black');
+        trackLabel.appendChild(trackPath);
+    }
+
+    InsertText(3+(22*qr)+'mm', '8mm', PARTIA,'16px', 'Arial black');
+    InsertText(3+(22*qr)+'mm', '14mm', 'Data uboju: '+TDUB,'15px', 'Arial','bold');
+    if(TGGN){
+                InsertText(3+(22*qr)+'mm', '21mm', 'GGN: '+TGGN,'15px', 'Arial','bold');
             } else if (TGGN == "" && TDMR) {
-                doc.text('Data mrożenia: '+TDMR, 67, 48, {height:0, width:230});
+                InsertText(3+(22*qr)+'mm', '21mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold');
             }
             if(TLOT != TATC){
-                doc.text('Traceability: '+TATC,10, 68, {height:0});
+                InsertText('3mm', '28mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
             } else if (TGGN && TDMR && TLOT == TATC) {
-                doc.text('Data mrożenia: '+TDMR,10, 68, {height:0});
+                InsertText('3mm', '28mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold')
             }
+    InsertText('3mm', '34mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
+    InsertText('3mm', '40mm','MHD: ','15px', 'Arial','bold');
+    InsertText('15mm', '40mm',TMHD,'16px', 'Arial black');
+    InsertText('3mm', '46mm','Lot: '+TLOT,'15px', 'Arial', 'bold');
+    InsertText('52mm', '41mm','Data produkcji:', '11px', 'Arial', 'bold');
+    InsertText('54mm', '46mm', DPR, '13px', 'Arial', 'bold');
 
-       }
+    function InsertText (x, y, text,fontsize, fontfamily, fontweight) {
+    this.trackText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        trackText.style.position = "relative";
+        trackText.setAttribute('x', x);
+        trackText.setAttribute('y', y);
+        trackText.setAttribute('font-size', fontsize);
+        trackText.setAttribute('font-family', fontfamily);
+        trackText.setAttribute('font-weight', fontweight);
+        trackText.innerHTML = text;
+    trackLabel.appendChild(trackText);
+
     }
+}
+    makeTrackBoard(true);
+    document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
+    document.addEventListener('keydown', function(e) {
+    var code = e.code;
+        if (code == 'ArrowUp' || code == 'ArrowRight') {
+            document.getElementById('lcopies').stepUp();
+        }
+        else if (code == 'ArrowDown' || code == 'ArrowLeft') {
+            document.getElementById('lcopies').stepDown();
+        }
+        else if (code == 'KeyQ') {
+            document.getElementById('enableqrcb').click();
+        }
+        else if (code == 'Enter') {
+            printPageArea("printtrack", trackCopies.value);
+        }
+    })
+
 }
 
 function newButton() {
     this.nowbut = document.createElement("button");
-    this.nowbut.style.font = 'Lato';
-    this.nowbut.style.position = 'absolute';
-    this.nowbut.style.top = '3.5px';
-    this.nowbut.style.left = '340px';
-    this.nowbut.style.padding = '0.18rem 0.78rem';
-    this.nowbut.style.float = 'left';
-    this.nowbut.style.borderRadius = '0.25rem';
-    this.nowbut.style.border = '1px solid transparent';
-    this.nowbut.style.textAllign = 'center';
-    this.nowbut.style.VerticalAllign = 'middle';
-    this.nowbut.innerText = 'New';
-    this.nowbut.style.backgroundColor = '#e83e8c';
-    this.nowbut.style.color = 'white';
-    this.nowbut.style.fontSize = '12px';
-    this.nowbut.style.cursor = "pointer";
-    this.nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
+    nowbut.style.font = 'Lato';
+    nowbut.style.position = 'absolute';
+   nowbut.style.top = '3.5px';
+    nowbut.style.left = '340px';
+    nowbut.style.padding = '0.18rem 0.78rem';
+    nowbut.style.float = 'left';
+    nowbut.style.borderRadius = '0.25rem';
+    nowbut.style.border = '1px solid transparent';
+    nowbut.style.textAllign = 'center';
+    nowbut.style.VerticalAllign = 'middle';
+    nowbut.innerText = 'New';
+    nowbut.style.backgroundColor = '#e83e8c';
+    nowbut.style.color = 'white';
+    nowbut.style.fontSize = '12px';
+    nowbut.style.cursor = "pointer";
+    nowbut.onclick = function() { window.location.href = 'https://traceability24.eu/batches/create'; };
     document.body.appendChild(nowbut);
 }
 
 function funcButton(name, position, ajdi) {
     this.databut = document.createElement("button");
-    this.databut.id = 'button'+ajdi;
-    this.databut.type = 'button';
-    this.databut.tabIndex = '-1';
-    this.databut.style.font = 'Lato';
-    this.databut.style.position = 'inherit';
-    this.databut.style.padding = '0.20rem 0.75rem';
-    this.databut.style.borderRadius = '0.25rem';
-    this.databut.style.border = '1px solid transparent';
-    this.databut.style.marginRight = '10px';
-    this.databut.style.fontWeight = 'bold';
-    this.databut.style.textAllign = 'center';
-    this.databut.style.VerticalAllign = 'middle';
-    this.databut.innerText = name;
-    this.databut.style.backgroundColor = '#6610f2';
-    this.databut.style.color = 'white';
-    this.databut.style.fontSize = '12px';
-    this.databut.style.cursor = "pointer";
-    position.append(this.databut);
+    databut.id = 'button'+ajdi;
+    databut.type = 'button';
+    databut.tabIndex = '-1';
+    databut.style.font = 'Lato';
+    databut.style.position = 'inherit';
+    databut.style.padding = '0.20rem 0.75rem';
+    databut.style.borderRadius = '0.25rem';
+    databut.style.border = '1px solid transparent';
+    databut.style.marginRight = '10px';
+    databut.style.fontWeight = 'bold';
+    databut.style.textAllign = 'center';
+    databut.style.VerticalAllign = 'middle';
+    databut.innerText = name;
+    databut.style.backgroundColor = '#6610f2';
+    databut.style.color = 'white';
+    databut.style.fontSize = '12px';
+    databut.style.cursor = "pointer";
+    position.append(databut);
 }
         function cngDate (range) {
         if (document.querySelector("#b_freezing_date").value) {
@@ -421,3 +482,20 @@ function funcButton(name, position, ajdi) {
         }
     };
 }
+
+function printPageArea(areaID, labelCopies){
+    var printContent = document.getElementById(areaID);
+    var WinPrint = window.open('', '', 'width=640, height=680');
+    WinPrint.document.write('<style type="text/css">@media print {body {margin-top:0 !important;} }</style>');
+    for (var i = 1; i <= labelCopies; i++) {
+        WinPrint.document.write(printContent.innerHTML);
+        if (i != labelCopies) {
+            WinPrint.document.write('<div style="page-break-after: always;"></div>');
+        }
+    }
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+}
+
