@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.12
+// @version     1.13
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -66,25 +66,30 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
     for(i = 0; i < document.body.getElementsByClassName('form-group').length-2; i++){
     document.body.getElementsByClassName('form-group')[i].children[1].setAttribute("placeholder", document.body.getElementsByClassName('form-group')[i].children[0].innerHTML);
     }
-    for(i = 1; i < 6; i++){
+    for(i = 1; i < 7; i++){
     document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)').remove();
-        if(i < 3) {
+        if(i < 4) {
         document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(2) > div:nth-child(1) > label:nth-child(1)').remove();
         }
     }
-    document.querySelector('div.row:nth-child(3)').style.maxWidth = '67%';
+    document.querySelector('div.row:nth-child(3)').style.maxWidth = '60%';
     document.querySelector('div.row:nth-child(3)').style.position = 'absolute';
     document.querySelector('div.row:nth-child(3)').style.background = '';
 
-    for (i = 1; i<=2; i++) {
-    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.left = '997';
+    document.querySelector('div.col-lg-2:nth-child(3) > div:nth-child(2) > div:nth-child(1)').children[0][0].innerText = 'Platform:'
+
+    for (i = 1; i<=3; i++) {
+    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.left = '888';
     document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.position = 'absolute';
     document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.top = '0';
     document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.width = '84.5%';
     }
 
-    document.querySelector('div.col-lg-2:nth-child(6)').style.left = '394';
-    document.querySelector('div.col-lg-2:nth-child(6)').style.top = '-24';
+    document.querySelector('div.col-lg-2:nth-child(6)').style.left = '1412';
+    document.querySelector('div.col-lg-2:nth-child(6)').style.top = '-22';
+    document.querySelector('div.col-lg-2:nth-child(6)').style.position = 'absolute';
+    document.querySelector('div.col-lg-2:nth-child(6)').style.maxWidth = '0';
+
 
     document.querySelector('div.col-lg-12:nth-child(1)').style.top = '35';
 
@@ -95,6 +100,7 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
     document.querySelector('button.btn-info:nth-child(3)').style.top = '-55';
 
     document.querySelector('body > p:nth-child(3) > small:nth-child(1)').remove();
+
 
     newButton();
 }
@@ -179,7 +185,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     }
 
     if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
-        document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = " "; // hard space
+        document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = "\xa0"; // hard space
     }
 
     const STX = String.fromCharCode(2);
