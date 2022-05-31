@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.13
+// @version     1.14
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -38,25 +38,25 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
     }
 
 }
-    if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/create'){
+    if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/create' || window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/update'){
         document.querySelector('div.row:nth-child(1)').remove();
         document.querySelector('hr').style.borderTop = '0';
         document.querySelector('.col-md-8').style.top = '20';
 
-        funcButton('Pobierz z lotu', document.querySelector('div.row:nth-child(6) > div:nth-child(1)'), 1);
-        document.getElementById("button1").addEventListener("click", () => getLotBut("#b_prod_date"));
+        funcButton('Pobierz z lotu', document.querySelector('[name="b_prod_date"]').parentElement.parentElement.parentElement, 1);
+        document.getElementById("button1").addEventListener("click", () => getLotBut('[name="b_prod_date"]'));
 
-        funcButton('+ 12m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 2)
+        funcButton('+ 12m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 2)
         document.getElementById("button2").addEventListener("click", () => cngDate(12));
-        funcButton('+ 15m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 3);
+        funcButton('+ 15m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 3);
         document.getElementById("button3").addEventListener("click", () => cngDate(15));
-        funcButton('+ 18m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 4);
+        funcButton('+ 18m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 4);
         document.getElementById("button4").addEventListener("click", () => cngDate(18));
-        funcButton('+ 24m', document.querySelector('div.row:nth-child(6) > div:nth-child(2)'), 5);
+        funcButton('+ 24m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 5);
         document.getElementById("button5").addEventListener("click", () => cngDate(24));
 
-        funcButton('Pobierz z lotu', document.querySelector('div.row:nth-child(6) > div:nth-child(3)'), 6);
-        document.getElementById("button6").addEventListener("click", () => getLotBut("#b_freezing_date"));
+        funcButton('Pobierz z lotu', document.querySelector('[name="b_freezing_date"]').parentElement.parentElement.parentElement, 6);
+        document.getElementById("button6").addEventListener("click", () => getLotBut('[name="b_freezing_date"]'));
     }
 
 if(window.location.href.toString() === 'https://traceability24.eu/batches' || window.location.href.toString().substr(0,39) === 'https://traceability24.eu/batches/index'){
@@ -72,32 +72,35 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
         document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(2) > div:nth-child(1) > label:nth-child(1)').remove();
         }
     }
-    document.querySelector('div.row:nth-child(3)').style.maxWidth = '60%';
-    document.querySelector('div.row:nth-child(3)').style.position = 'absolute';
+
     document.querySelector('div.row:nth-child(3)').style.background = '';
 
     document.querySelector('div.col-lg-2:nth-child(3) > div:nth-child(2) > div:nth-child(1)').children[0][0].innerText = 'Platform:'
 
-    for (i = 1; i<=3; i++) {
-    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.left = '888';
-    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.position = 'absolute';
-    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.top = '0';
-    document.querySelector('div.col-lg-2:nth-child('+ i +') > div:nth-child(2) > div:nth-child(1)').style.width = '84.5%';
-    }
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_products_p_code"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_batch_nr"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_ean"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_traceability_code"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="dorm_supplier_name"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_prod_date_from"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_prod_date_to"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="st_platform_id"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelectorAll('[type="submit"]')[0])
 
-    document.querySelector('div.col-lg-2:nth-child(6)').style.left = '1412';
-    document.querySelector('div.col-lg-2:nth-child(6)').style.top = '-22';
-    document.querySelector('div.col-lg-2:nth-child(6)').style.position = 'absolute';
-    document.querySelector('div.col-lg-2:nth-child(6)').style.maxWidth = '0';
+    document.querySelectorAll('[type="submit"]')[0].style.height = 35
 
+    document.querySelectorAll("div.col-lg-2").forEach(e => e.remove());
 
-    document.querySelector('div.col-lg-12:nth-child(1)').style.top = '35';
+    document.querySelectorAll(".form-control").forEach(e => (e.style.width = '90%'));
+
+    document.querySelector('div.col-lg-12:nth-child(3)').style.top = 10;
+
+    document.querySelector("button.btn:nth-child(3)").remove();
+
+    document.querySelector('div.col-lg-12:nth-child(1)').style.top = '-15';
 
     document.querySelector('.table').style.position = 'relative';
     document.querySelector('.table').style.top = '-40';
-
-    document.querySelector('button.btn-info:nth-child(3)').style.position = 'relative';
-    document.querySelector('button.btn-info:nth-child(3)').style.top = '-55';
 
     document.querySelector('body > p:nth-child(3) > small:nth-child(1)').remove();
 
@@ -153,10 +156,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('.col-lg-4').style.maxWidth = "100%";
     document.querySelector('.col-lg-4').style.flex = "0 0 100%";
 
-    document.querySelector('hr.my-4:nth-child(10)').remove();
-
-    document.querySelector('div.row:nth-child(10)').remove();
-
     document.querySelector('div.row:nth-child(9)').style.marginBottom = "12";
 
     document.querySelector('.card-footer').style.position = "absolute";
@@ -165,7 +164,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('.card-footer').style.color = "white !important";
     document.querySelector('.card-footer').style.left = "369";
 
-    document.querySelectorAll('.btn').forEach(el => el.style.lineHeight = 1);
+    document.querySelectorAll('.btn').forEach(el => (el.style.lineHeight = 1));
 
     document.querySelector('.card').style.padding = "0";
 
@@ -466,25 +465,25 @@ function funcButton(name, position, ajdi) {
     position.append(databut);
 }
         function cngDate (range) {
-        if (document.querySelector("#b_freezing_date").value) {
-            var dataLot = document.querySelector("#b_freezing_date").value
+        if (document.querySelector('[name="b_freezing_date"]').value) {
+            var dataLot = document.querySelector('[name="b_freezing_date"]').value
             dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
             var newDataLot = dataLot.addMonths(range);
-            $('#b_exp_date').datepicker('update', newDataLot);
-        } else if (document.querySelector("#b_lot_nr").value) {
-            getLotBut("#b_freezing_date");
+            $('[name="b_exp_date"]').datepicker('update', newDataLot);
+        } else if (document.querySelector('[name="b_lot_nr"]').value) {
+            getLotBut('[name="b_freezing_date"]');
             cngDate(range);
             } else {
-                 document.querySelector("#b_lot_nr").focus();
+                 document.querySelector('[name="b_lot_nr"]').focus();
             }
     };
             function getLotBut (inputeg) {
-        if (document.querySelector("#b_lot_nr").value) {
-        var dataLot = document.querySelector("#b_lot_nr").value;
+        if (document.querySelector('[name="b_lot_nr"]').value) {
+        var dataLot = document.querySelector('[name="b_lot_nr"]').value;
             dataLot = new Date(20 + dataLot.substr(-2,2), 0, dataLot.substr(-5,3), 2);
             $(inputeg).datepicker('update', dataLot);
         } else {
-            document.querySelector("#b_lot_nr").focus();
+            document.querySelector('[name="b_lot_nr"]').focus();
         }
     };
 }
@@ -492,7 +491,7 @@ function funcButton(name, position, ajdi) {
 function printPageArea(areaID, labelCopies){
     var printContent = document.getElementById(areaID);
     var WinPrint = window.open('', '', 'width=640, height=680');
-    WinPrint.document.write('<style type="text/css">@media print {body {margin-top:0 !important;} }</style>');
+    WinPrint.document.write('<style type="text/css">@media print { body {margin-top:0 !important;} } @page { size: auto;  margin: 0mm; }</style>');
     for (var i = 1; i <= labelCopies; i++) {
         WinPrint.document.write(printContent.innerHTML);
         if (i != labelCopies) {
@@ -504,4 +503,3 @@ function printPageArea(areaID, labelCopies){
     WinPrint.print();
     WinPrint.close();
 }
-
