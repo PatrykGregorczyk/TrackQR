@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.18
+// @version     1.19
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -415,14 +415,14 @@ function makeTrackBoard (qr) {
     if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109')) {
     svgNode = QRCode({
          msg :  STX + 'M' + TIND + ' (QR)' + ETX
-         + STX + 'U{MHD}' + SEP + TMHD + ETX
-         + STX + 'U{LOT}' + SEP + TLOT + ETX
-         + STX + 'U{ATC}' + SEP + TATC + ETX
-         + STX + 'U{DUB}' + SEP + TDUB + ETX
-         + STX + 'U{GGN}' + SEP + TGGN + ETX
-         + STX + 'U{DMR}' + SEP + TDMR + ETX
-         + STX + 'U{DPR}' + SEP + DPR + ETX
-         + STX + 'U{PON}' + SEP + poNum.value + ETX
+         + STX + 'UTMHD' + SEP + TMHD + ETX
+         + STX + 'UTLOT' + SEP + TLOT + ETX
+         + STX + 'UTATC' + SEP + TATC + ETX
+         + STX + 'UTDUB' + SEP + TDUB + ETX
+         + STX + 'UTGGN' + SEP + TGGN + ETX
+         + STX + 'UTDMR' + SEP + TDMR + ETX
+         + STX + 'UTDPR' + SEP + DPR + ETX
+         + STX + 'UTPON' + SEP + poNum.value + ETX
          ,pad :	 4
          ,ecl :  "L"
          ,ecb :   1
