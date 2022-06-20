@@ -7,12 +7,13 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.14
+// @version     1.18
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
 
 window.addEventListener ("load", DOM_ContentReady);
+
 
 function DOM_ContentReady () {
 
@@ -190,6 +191,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
     const SEP = String.fromCharCode(10);
+    const CR = String.fromCharCode(13,10)
     var TIND = document.querySelector(".milcode").outerText;
     var TMHD = document.querySelector("div.col-lg-4:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").outerText;
     var TDMR = document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > h5:nth-child(2)").outerText;
@@ -201,6 +203,9 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var PARTIA = document.querySelector(".card-header > strong:nth-child(1)").outerText;
     var PRODUKT = document.querySelector("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").outerText;
 	var CERT = document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
+
+    var monthca = [, 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+
 
 	const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
@@ -214,11 +219,39 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     DPR = DPR[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
     lotISO = lotISO[8] + lotISO[9] + '.' + lotISO[5] + lotISO[6] + '.' + lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3];
 
+     var poNum = document.createElement('input');
+    poNum.id = 'tpon';
+    poNum.setAttribute('min', '202456');
+    poNum.setAttribute('max', '202465');
+    poNum.style.width = "120px";
+    poNum.defaultValue = "";
+    poNum.maxLength = 6;
+    poNum.minLength = 6;
+    poNum.style.position = "absolute";
+    poNum.style.top = "160px";
+    poNum.style.left = "1450px";
+    poNum.onkeyup = function() {
+        if (poNum.value.length == 6) {
+            makeTrackBoard(enableQr.checked);
+        } else if (poNum.value.length < 6 && document.querySelector("#printtrack")){
+            document.querySelector("#printtrack").remove();
+        }
+    }
+    if(TIND == '3.2.1.128'){
+    document.body.appendChild(poNum);
+    }
+
+    var MHDF1 = TMHD[3] + TMHD[4] + '.' + TMHD[0] + TMHD[1] + '.' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
+    var MHDF2 = TMHD[3] + TMHD[4] + '/' + TMHD[0] + TMHD[1] + '/' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
+    var MHDF3 = TMHD[0] + TMHD[1] + ' ' + monthca[parseInt(TMHD[3] + TMHD[4])] + ' ' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
+
+    var DMRF
 
    if(TDMR === ""){
        document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
    } else {
        TDMR = TDMR[8] + TDMR[9] + '.' + TDMR[5] + TDMR[6] + '.' + TDMR[0] + TDMR[1] + TDMR[2] + TDMR[3];
+       DMRF = TDMR[3] + TDMR[4] + '/' + TDMR[0] + TDMR[1] + '/' + TDMR[6] + TDMR[7] + TDMR[8] + TDMR[9];
    }
 
    for(i = 2; document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
@@ -241,28 +274,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector("h5.text-success").innerText = TDUB;
     document.querySelector("h5.text-info").innerText = DPR;
 
-
-    var svgNode = QRCode({
-     msg :  STX + 'M' + TIND + ' (QR)' + ETX
- 	      + STX + 'UTMHD' + SEP + TMHD + ETX
-          + STX + 'UTLOT' + SEP + TLOT + ETX
-	      + STX + 'UTATC' + SEP + TATC + ETX
-	 	  + STX + 'UTDUB' + SEP + TDUB + ETX
-		  + STX + 'UTGGN' + SEP + TGGN + ETX
-  	,pad :	 4
-    ,ecl :  "L"
-    ,ecb :   1
-    ,vrb :   1
-    });
-
-    var s = svgNode.getElementsByTagName("path")[0].getAttribute('d');
-
     newButton();
-
-    var serializedSVG = new XMLSerializer().serializeToString(svgNode);
-    var base64Data = window.btoa(serializedSVG);
-    document.getElementById("qrcode").getElementsByTagName("img")[0].src = "data:image/svg+xml;base64," + base64Data;
-    document.getElementById("qrcode").getElementsByTagName("img")[0].style.width = '110';
 
     var warnboard = document.createElement("div")
     warnboard.style.position = 'absolute';
@@ -292,16 +304,17 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         warnboard.appendChild(warn);
         }
 
+
+
        var trackCopies = document.createElement('input');
     trackCopies.id = 'lcopies';
     trackCopies.setAttribute('type', 'number');
     trackCopies.setAttribute('min', '1');
     trackCopies.setAttribute('max', '10');
-    trackCopies.innerHtml = "xD";
     trackCopies.style.width = "50px";
     trackCopies.defaultValue = 3;
     trackCopies.style.position = "absolute";
-    trackCopies.style.top = "150px";
+    trackCopies.style.top = "120px";
     trackCopies.style.left = "1450px";
     document.body.appendChild(trackCopies);
 
@@ -310,7 +323,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     enableQr.defaultChecked = true;
     enableQr.id = 'enableqrcb';
     enableQr.style.position = "absolute";
-    enableQr.style.top = "110px";
+    enableQr.style.top = "80px";
     enableQr.style.left = "1450px";
     enableQr.onchange = function() {if (enableQr.checked) {
             makeTrackBoard(true);
@@ -325,21 +338,98 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var labelForCb = document.createElement('p');
     labelForCb.style.position = "absolute";
     labelForCb.innerHTML = 'QRCode (klawisz q - zmiana)';
-    labelForCb.style.top = "106px";
+    labelForCb.style.top = "76px";
     labelForCb.style.left = "1470px";
     document.body.appendChild(labelForCb);
 
     var labelForCopy = document.createElement('p');
     labelForCopy.style.position = "absolute";
     labelForCopy.innerHTML = 'Ilość kopii (strzałki - zmiana; enter - drukuj)';
-    labelForCopy.style.top = "151px";
+    labelForCopy.style.top = "121px";
     labelForCopy.style.left = "1510px";
     document.body.appendChild(labelForCopy);
+
+    var labelForPon = document.createElement('p');
+    labelForPon.style.position = "absolute";
+    labelForPon.innerHTML = 'Kontener';
+    labelForPon.style.top = "163px";
+    labelForPon.style.left = "1590px";
+    if(TIND == '3.2.1.128') {
+    document.body.appendChild(labelForPon);
+    }
 
 function makeTrackBoard (qr) {
     if(document.querySelector("#printtrack")) {
         document.querySelector("#printtrack").remove();
     }
+    if(TIND == '3.2.1.73' || TIND == '3.3.1.96') {
+     var svgNode = QRCode({
+     msg :  'SLA|' + TIND
+ 	     + '|{DMR}=' + DMRF
+         + '|{MHD}=' + MHDF1
+         + '|{LOT}=' + TLOT
+         + '|{GGN}=' + TGGN
+         + '|{PON}=' + poNum.value
+         + '|{DUB}=' + TDUB
+         + '|{DPR}=' + DPR
+         + '|{ATC}=' + TATC + '|' + CR
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
+    } else if (TIND == '3.2.1.128' && poNum.value.length == 6) {
+    svgNode = QRCode({
+     msg :  'SLA|' + TIND
+ 	     + '|{DMR}=' + DMRF
+         + '|{MHD}=' + MHDF2
+         + '|{LOT}=' + TLOT
+         + '|{GGN}=' + TGGN
+         + '|{PON}=' + poNum.value
+         + '|{DUB}=' + TDUB
+         + '|{DPR}=' + DPR
+         + '|{ATC}=' + TATC + '|' + CR
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
+    } else if (TIND == '3.2.1.109') {
+    svgNode = QRCode({
+     msg :  'SLA|' + TIND
+ 	     + '|{DMR}=' + DMRF
+         + '|{MHD}=' + MHDF3
+         + '|{LOT}=' + TLOT
+         + '|{GGN}=' + TGGN
+         + '|{PON}=' + poNum.value
+         + '|{DUB}=' + TDUB
+         + '|{DPR}=' + DPR
+         + '|{ATC}=' + TATC + '|' + CR
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
+    }
+
+    if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109')) {
+    svgNode = QRCode({
+         msg :  STX + 'M' + TIND + ' (QR)' + ETX
+         + STX + 'U{MHD}' + SEP + TMHD + ETX
+         + STX + 'U{LOT}' + SEP + TLOT + ETX
+         + STX + 'U{ATC}' + SEP + TATC + ETX
+         + STX + 'U{DUB}' + SEP + TDUB + ETX
+         + STX + 'U{GGN}' + SEP + TGGN + ETX
+         + STX + 'U{DMR}' + SEP + TDMR + ETX
+         + STX + 'U{DPR}' + SEP + DPR + ETX
+         + STX + 'U{PON}' + SEP + poNum.value + ETX
+         ,pad :	 4
+         ,ecl :  "L"
+         ,ecb :   1
+         ,vrb :   1
+        });
+    }
+        var s = svgNode.getElementsByTagName("path")[0].getAttribute('d');
 
     var trackBoard = document.createElement("div");
     trackBoard.id = "printtrack";
@@ -352,6 +442,7 @@ function makeTrackBoard (qr) {
     trackBoard.style.border = "1px solid grey"
     trackBoard.style.borderRadius = "8px";
     document.body.appendChild(trackBoard);
+
 
     var trackLabel = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     trackLabel.style.fontSize = "0px";
@@ -370,26 +461,29 @@ function makeTrackBoard (qr) {
         trackLabel.appendChild(trackPath);
     }
 
-    InsertText(3+(22*qr)+'mm', '8mm', PARTIA,'16px', 'Arial black');
-    InsertText(3+(22*qr)+'mm', '14mm', 'Data uboju: '+TDUB,'15px', 'Arial','bold');
+    InsertText(3+(22*qr)+'mm', '7.5mm', PARTIA,'16px', 'Arial black');
+    InsertText(3+(22*qr)+'mm', '12.5mm', 'Data uboju: '+TDUB,'15px', 'Arial','bold');
     if(TGGN){
-                InsertText(3+(22*qr)+'mm', '21mm', 'GGN: '+TGGN,'15px', 'Arial','bold');
+                InsertText(3+(22*qr)+'mm', '18.25mm', 'GGN: '+TGGN,'15px', 'Arial','bold');
             } else if (TGGN == "" && TDMR) {
-                InsertText(3+(22*qr)+'mm', '21mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold');
+                InsertText(3+(22*qr)+'mm', '18.25mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold');
             }
             if(TLOT != TATC){
-                InsertText('3mm', '28mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
+                InsertText('3mm', '29.5mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
             } else if (TGGN && TDMR && TLOT == TATC) {
-                InsertText('3mm', '28mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold')
+                InsertText('3mm', '29.5mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold')
             }
-    InsertText('3mm', '34mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
-    InsertText('3mm', '40mm','MHD: ','15px', 'Arial','bold');
-    InsertText('15mm', '40mm',TMHD,'16px', 'Arial black');
+    if(TIND == '3.2.1.128') {
+        InsertText(3+(22*qr)+'mm', '23.5mm', 'Kontener: '+poNum.value,'15px', 'Arial','bold')
+    }
+    InsertText('3mm', '35mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
+    InsertText('3mm', '40.5mm','MHD: ','15px', 'Arial','bold');
+    InsertText('15mm', '40.5mm',TMHD,'16px', 'Arial black');
     InsertText('3mm', '46mm','Lot: '+TLOT,'15px', 'Arial', 'bold');
     InsertText('52mm', '41mm','Data produkcji:', '11px', 'Arial', 'bold');
     InsertText('54mm', '46mm', DPR, '13px', 'Arial', 'bold');
 
-    function InsertText (x, y, text,fontsize, fontfamily, fontweight) {
+    function InsertText (x, y, text, fontsize, fontfamily, fontweight) {
     this.trackText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         trackText.style.position = "relative";
         trackText.setAttribute('x', x);
@@ -402,14 +496,17 @@ function makeTrackBoard (qr) {
 
     }
 }
+    if (TIND == '3.2.1.128' && poNum.value.length == 6 || TIND != '3.2.1.128') {
     makeTrackBoard(true);
     document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
+    }
+
     document.addEventListener('keydown', function(e) {
     var code = e.code;
-        if (code == 'ArrowUp' || code == 'ArrowRight') {
+        if (code == 'ArrowUp') {
             document.getElementById('lcopies').stepUp();
         }
-        else if (code == 'ArrowDown' || code == 'ArrowLeft') {
+        else if (code == 'ArrowDown') {
             document.getElementById('lcopies').stepDown();
         }
         else if (code == 'KeyQ') {
@@ -426,7 +523,7 @@ function newButton() {
     this.nowbut = document.createElement("button");
     nowbut.style.font = 'Lato';
     nowbut.style.position = 'absolute';
-   nowbut.style.top = '3.5px';
+    nowbut.style.top = '3.5px';
     nowbut.style.left = '340px';
     nowbut.style.padding = '0.18rem 0.78rem';
     nowbut.style.float = 'left';
@@ -479,6 +576,30 @@ function funcButton(name, position, ajdi) {
     };
             function getLotBut (inputeg) {
         if (document.querySelector('[name="b_lot_nr"]').value) {
+        var dataLot = document.querySelector('[name="b_lot_nr"]').value;
+            dataLot = new Date(20 + dataLot.substr(-2,2), 0, dataLot.substr(-5,3), 2);
+            $(inputeg).datepicker('update', dataLot);
+        } else {
+            document.querySelector('[name="b_lot_nr"]').focus();
+        }
+    };
+}
+
+function printPageArea(areaID, labelCopies){
+    var printContent = document.getElementById(areaID);
+    var WinPrint = window.open('', '', 'width=640, height=680');
+    WinPrint.document.write('<style type="text/css">@media print { body {margin-top:0 !important;} } @page { size: auto;  margin: 0mm; }</style>');
+    for (var i = 1; i <= labelCopies; i++) {
+        WinPrint.document.write(printContent.innerHTML);
+        if (i != labelCopies) {
+            WinPrint.document.write('<div style="page-break-after: always;"></div>');
+        }
+    }
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+}alue) {
         var dataLot = document.querySelector('[name="b_lot_nr"]').value;
             dataLot = new Date(20 + dataLot.substr(-2,2), 0, dataLot.substr(-5,3), 2);
             $(inputeg).datepicker('update', dataLot);
