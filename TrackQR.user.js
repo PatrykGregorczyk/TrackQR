@@ -599,28 +599,4 @@ function printPageArea(areaID, labelCopies){
     WinPrint.focus();
     WinPrint.print();
     WinPrint.close();
-}alue) {
-        var dataLot = document.querySelector('[name="b_lot_nr"]').value;
-            dataLot = new Date(20 + dataLot.substr(-2,2), 0, dataLot.substr(-5,3), 2);
-            $(inputeg).datepicker('update', dataLot);
-        } else {
-            document.querySelector('[name="b_lot_nr"]').focus();
-        }
-    };
-}
-
-function printPageArea(areaID, labelCopies){
-    var printContent = document.getElementById(areaID);
-    var WinPrint = window.open('', '', 'width=640, height=680');
-    WinPrint.document.write('<style type="text/css">@media print { body {margin-top:0 !important;} } @page { size: auto;  margin: 0mm; }</style>');
-    for (var i = 1; i <= labelCopies; i++) {
-        WinPrint.document.write(printContent.innerHTML);
-        if (i != labelCopies) {
-            WinPrint.document.write('<div style="page-break-after: always;"></div>');
-        }
-    }
-    WinPrint.document.close();
-    WinPrint.focus();
-    WinPrint.print();
-    WinPrint.close();
 }
