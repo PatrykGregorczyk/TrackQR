@@ -7,13 +7,12 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.19
+// @version     1.20
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
 
 window.addEventListener ("load", DOM_ContentReady);
-
 
 function DOM_ContentReady () {
 
@@ -410,9 +409,25 @@ function makeTrackBoard (qr) {
     ,ecb :   1
     ,vrb :   1
     });
+    } else if (TIND == '3.5.1.115') {
+    svgNode = QRCode({
+         msg :  STX + 'M' + TIND + ' (QR)' + ETX
+         + STX + 'UBMHD' + SEP + MHDF1 + ETX
+         + STX + 'UBLOT' + SEP + TLOT + ETX
+         + STX + 'UTATC' + SEP + TATC + ETX
+         + STX + 'UTDUB' + SEP + TDUB + ETX
+         + STX + 'UTGGN' + SEP + TGGN + ETX
+         + STX + 'UTDMR' + SEP + TDMR + ETX
+         + STX + 'UTDPR' + SEP + DPR + ETX
+         + STX + 'UTPON' + SEP + poNum.value + ETX
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
     }
 
-    if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109')) {
+    if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109' || TIND == '3.5.1.115')) {
     svgNode = QRCode({
          msg :  STX + 'M' + TIND + ' (QR)' + ETX
          + STX + 'UTMHD' + SEP + TMHD + ETX
