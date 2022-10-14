@@ -189,7 +189,15 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
         document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = "\xa0"; // hard space
     }
-
+	
+/*	var dfStd = 'dd.mm.yyyy';
+	var dfCanada1 = 'dd mmm yyyy';
+	var dfJapan1 = 'yyyy.mm';
+	var dfJapan2 = 'yyyy.mm.dd';
+	var dfUsa1 = 'mm.dd.yyyy';
+	var dfUsa2 = 'mm/dd/yyyy';
+	var dfUsa3 = 'mmm dd yyyy';
+*/
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
     const SEP = String.fromCharCode(10);
