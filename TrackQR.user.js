@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.25
+// @version     1.27
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -26,7 +26,7 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
     document.querySelector('div.row:nth-child(3)').style.background = '';
     document.querySelector('div.row:nth-child(3)').style.top = '12';
 
-    document.querySelector('div.col-lg-2:nth-child(3)').style.top = '-22';
+   // document.querySelector('div.col-lg-2:nth-child(3)').style.top = '-22';
 
     document.querySelector('div.col-lg-12:nth-child(1)').style.top = '-30';
 
@@ -46,17 +46,19 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
         funcButton('Pobierz z lotu', document.querySelector('[name="b_prod_date"]').parentElement.parentElement.parentElement, 1);
         document.getElementById("button1").addEventListener("click", () => getLotBut('[name="b_prod_date"]'));
 
-        funcButton('+ 12m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 2)
-        document.getElementById("button2").addEventListener("click", () => cngDate(12));
+        funcButton('+ 12m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 2);
+        document.getElementById("button2").addEventListener("click", () => cngDate(12, 0));
         funcButton('+ 15m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 3);
-        document.getElementById("button3").addEventListener("click", () => cngDate(15));
+        document.getElementById("button3").addEventListener("click", () => cngDate(15, 0));
         funcButton('+ 18m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 4);
-        document.getElementById("button4").addEventListener("click", () => cngDate(18));
+        document.getElementById("button4").addEventListener("click", () => cngDate(18, 0));
         funcButton('+ 24m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 5);
-        document.getElementById("button5").addEventListener("click", () => cngDate(24));
+        document.getElementById("button5").addEventListener("click", () => cngDate(24, 0));
+        funcButton('JP18-1', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 6);
+        document.getElementById("button6").addEventListener("click", () => cngDate(18, 1));
 
-        funcButton('Pobierz z lotu', document.querySelector('[name="b_freezing_date"]').parentElement.parentElement.parentElement, 6);
-        document.getElementById("button6").addEventListener("click", () => getLotBut('[name="b_freezing_date"]'));
+        funcButton('Pobierz z lotu', document.querySelector('[name="b_freezing_date"]').parentElement.parentElement.parentElement, 7);
+        document.getElementById("button7").addEventListener("click", () => getLotBut('[name="b_freezing_date"]'));
     }
 
 if(window.location.href.toString() === 'https://traceability24.eu/batches' || window.location.href.toString().substr(0,39) === 'https://traceability24.eu/batches/index'){
@@ -149,6 +151,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.position = "absolute";
     document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.top = "0";
     document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.left = "615";
+    document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2)').style.width = "100%";
 
     document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').style.position = "absolute";
     document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)').style.left = "15";
@@ -375,7 +378,6 @@ function makeTrackBoard (qr) {
          + '|{GGN}=' + TGGN
          + '|{PON}=' + poNum.value
          + '|{DUB}=' + TDUB
-         + '|{DPR}=' + DPR
          + '|{ATC}=' + TATC + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
@@ -391,7 +393,6 @@ function makeTrackBoard (qr) {
          + '|{GGN}=' + TGGN
          + '|{PON}=' + poNum.value
          + '|{DUB}=' + TDUB
-         + '|{DPR}=' + DPR
          + '|{ATC}=' + TATC + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
@@ -402,19 +403,35 @@ function makeTrackBoard (qr) {
     svgNode = QRCode({
      msg :  'SLA|' + TIND
  	     + '|{DMR}=' + DMRF
-         + '|{MHD}=' + MHDF3
+         + '|{MHD}=' + MHDF3.toUpperCase()
          + '|{LOT}=' + TLOT
          + '|{GGN}=' + TGGN
          + '|{PON}=' + poNum.value
          + '|{DUB}=' + TDUB
-         + '|{DPR}=' + DPR
          + '|{ATC}=' + TATC + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
     ,vrb :   1
     });
-    } /*else if (TIND == '3.5.1.115') {
+    } else if (TIND == '3.2.1.149') {
+    svgNode = QRCode({
+     msg :  'SLA|' + TIND
+ 	     + '|{DMR}=' + DMRF.toUpperCase()
+         + '|{MHD}=' + TMHD.toUpperCase()
+         + '|{LOT}=' + TLOT
+         + '|{GGN}=' + TGGN
+         + '|{PON}=' + poNum.value
+         + '|{DUB}=' + TDUB
+         + '|{ATC}=' + TATC + '|' + CR
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
+    }
+
+    /*else if (TIND == '3.5.1.115') {
     svgNode = QRCode({
          msg :  STX + 'M' + TIND + ' (QR)' + ETX
          + STX + 'UBMHD' + SEP + MHDF1 + ETX
@@ -423,7 +440,6 @@ function makeTrackBoard (qr) {
          + STX + 'UTDUB' + SEP + TDUB + ETX
          + STX + 'UTGGN' + SEP + TGGN + ETX
          + STX + 'UTDMR' + SEP + TDMR + ETX
-         + STX + 'UTDPR' + SEP + DPR + ETX
          + STX + 'UTPON' + SEP + poNum.value + ETX
   	,pad :	 4
     ,ecl :  "L"
@@ -431,8 +447,24 @@ function makeTrackBoard (qr) {
     ,vrb :   1
     });
     }*/
+    else if (TIND == '3.5.1.115') {
+    svgNode = QRCode({
+         msg :  STX + 'M' + TIND + ' (QR)' + ETX
+         + STX + 'UBMHD' + SEP + MHDF1 + ETX
+         + STX + 'UBLOT' + SEP + TLOT + ETX
+         + STX + 'UTATC' + SEP + TATC + ETX
+         + STX + 'UTDUB' + SEP + TDUB + ETX
+         + STX + 'UTGGN' + SEP + TGGN + ETX
+         + STX + 'UTDMR' + SEP + TDMR + ETX
+         + STX + 'UTPON' + SEP + poNum.value + ETX
+  	,pad :	 4
+    ,ecl :  "L"
+    ,ecb :   1
+    ,vrb :   1
+    });
+    }
 
-    if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109')) {
+    if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109' || TIND == '3.2.1.149')) {
     svgNode = QRCode({
          msg :  STX + 'M' + TIND + ' (QR)' + ETX
          + STX + 'UTMHD' + SEP + TMHD + ETX
@@ -441,7 +473,6 @@ function makeTrackBoard (qr) {
          + STX + 'UTDUB' + SEP + TDUB + ETX
          + STX + 'UTGGN' + SEP + TGGN + ETX
          + STX + 'UTDMR' + SEP + TDMR + ETX
-         + STX + 'UTDPR' + SEP + DPR + ETX
          + STX + 'UTPON' + SEP + poNum.value + ETX
          ,pad :	 4
          ,ecl :  "L"
@@ -482,26 +513,26 @@ function makeTrackBoard (qr) {
     }
 
     InsertText(3+(22*qr)+'mm', '7.5mm', PARTIA,'16px', 'Arial black');
-    InsertText(3+(22*qr)+'mm', '12.5mm', 'Data uboju: '+TDUB,'15px', 'Arial','bold');
+    InsertText(3+(22*qr)+'mm', '12.5mm', 'Data uboju: '+TDUB.toUpperCase(),'15px', 'Arial','bold');
     if(TGGN){
                 InsertText(3+(22*qr)+'mm', '18.25mm', 'GGN: '+TGGN,'15px', 'Arial','bold');
             } else if (TGGN == "" && TDMR) {
-                InsertText(3+(22*qr)+'mm', '18.25mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold');
+                InsertText(3+(22*qr)+'mm', '18.25mm', 'Data mrożenia: '+TDMR.toUpperCase(),'15px', 'Arial','bold');
             }
             if(TLOT != TATC){
                 InsertText('3mm', '29.5mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
             } else if (TGGN && TDMR && TLOT == TATC) {
-                InsertText('3mm', '29.5mm', 'Data mrożenia: '+TDMR,'15px', 'Arial','bold')
+                InsertText('3mm', '29.5mm', 'Data mrożenia: '+TDMR.toUpperCase(),'15px', 'Arial','bold')
             }
     if(TIND == '3.2.1.128') {
         InsertText(3+(22*qr)+'mm', '23.5mm', 'Kontener: '+poNum.value,'15px', 'Arial','bold')
     }
     InsertText('3mm', '35mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
     InsertText('3mm', '40.5mm','MHD: ','15px', 'Arial','bold');
-    InsertText('15mm', '40.5mm',TMHD,'16px', 'Arial black');
+    InsertText('15mm', '40.5mm',TMHD.toUpperCase(),'16px', 'Arial black');
     InsertText('3mm', '46mm','Lot: '+TLOT,'15px', 'Arial', 'bold');
     InsertText('52mm', '41mm','Data produkcji:', '11px', 'Arial', 'bold');
-    InsertText('54mm', '46mm', DPR, '13px', 'Arial', 'bold');
+    InsertText('54mm', '46mm', lotISO, '13px', 'Arial', 'bold');
 
     function InsertText (x, y, text, fontsize, fontfamily, fontweight) {
     this.trackText = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -580,20 +611,27 @@ function funcButton(name, position, ajdi) {
     databut.style.cursor = "pointer";
     position.append(databut);
 }
-        function cngDate (range) {
+        function cngDate (range, jpnDF) {
         if (document.querySelector('[name="b_freezing_date"]').value) {
             var dataLot = document.querySelector('[name="b_freezing_date"]').value
-            dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
-            var newDataLot = dataLot.addMonths(range);
+            if (jpnDF) {
+                dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1,1,2);
+                var newDataLot = dataLot.addMonths(range);
+                newDataLot = newDataLot.addDays(-1);
+            } else {
+                dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
+                newDataLot = dataLot.addMonths(range);
+            }
             $('[name="b_exp_date"]').datepicker('update', newDataLot);
         } else if (document.querySelector('[name="b_lot_nr"]').value) {
             getLotBut('[name="b_freezing_date"]');
             getLotBut('[name="b_prod_date"]');
-            cngDate(range);
+            cngDate(range, jpnDF);
             } else {
                  document.querySelector('[name="b_lot_nr"]').focus();
             }
     };
+
             function getLotBut (inputeg) {
         if (document.querySelector('[name="b_lot_nr"]').value) {
         var dataLot = document.querySelector('[name="b_lot_nr"]').value;
