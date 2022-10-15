@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.27
+// @version     1.28
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -189,8 +189,9 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
         document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = "\xa0"; // hard space
     }
-	
-/*	var dfStd = 'dd.mm.yyyy';
+
+
+        /*	var dfStd = 'dd.mm.yyyy';
 	var dfCanada1 = 'dd mmm yyyy';
 	var dfJapan1 = 'yyyy.mm';
 	var dfJapan2 = 'yyyy.mm.dd';
@@ -198,6 +199,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 	var dfUsa2 = 'mm/dd/yyyy';
 	var dfUsa3 = 'mmm dd yyyy';
 */
+    console.log(document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText)
+
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
     const SEP = String.fromCharCode(10);
@@ -214,20 +217,57 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var PRODUKT = document.querySelector("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").outerText;
 	var CERT = document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
 
-    var monthca = [, 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-
-
 	const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
+
     var lotISO = LotDate.toISOString();
-    LotDate = new Date(lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3],(lotISO[5] + lotISO[6])-1, lotISO[8] + lotISO[9]);
-    var SprDU = new Date(TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3],(TDUB[5] + TDUB[6])-1, TDUB[8] + TDUB[9]);
-    var SprMHD = new Date(TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3], (TMHD[5] + TMHD[6])-1, TMHD[8] + TMHD[9]);
-    var SprDPR = new Date(DPR[0] + DPR[1] + DPR[2] + DPR[3], (DPR[5] + DPR[6])-1, DPR[8] + DPR[9]);
-    TMHD = TMHD//[8] + TMHD[9] + '.' + TMHD[5] + TMHD[6] + '.' + TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3];
-    TDUB = TDUB//[8] + TDUB[9] + '.' + TDUB[5] + TDUB[6] + '.' + TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3];
-    DPR = DPR//[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
+  //  LotDate = new Date(lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3],(lotISO[5] + lotISO[6])-1, lotISO[8] + lotISO[9]);
+
+    console.log(LotDate);
+   // var SprDU = new Date(TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3],(TDUB[5] + TDUB[6])-1, TDUB[8] + TDUB[9]);
+   // var SprMHD = new Date(TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3], (TMHD[5] + TMHD[6])-1, TMHD[8] + TMHD[9]);
+   // var SprDPR = new Date(DPR[0] + DPR[1] + DPR[2] + DPR[3], (DPR[5] + DPR[6])-1, DPR[8] + DPR[9]);
+   // TMHD = TMHD//[8] + TMHD[9] + '.' + TMHD[5] + TMHD[6] + '.' + TMHD[0] + TMHD[1] + TMHD[2] + TMHD[3];
+   // TDUB = TDUB//[8] + TDUB[9] + '.' + TDUB[5] + TDUB[6] + '.' + TDUB[0] + TDUB[1] + TDUB[2] + TDUB[3];
+  //  DPR = DPR//[8] + DPR[9] + '.' + DPR[5] + DPR[6] + '.' + DPR[0] + DPR[1] + DPR[2] + DPR[3];
     lotISO = lotISO[8] + lotISO[9] + '.' + lotISO[5] + lotISO[6] + '.' + lotISO[0] + lotISO[1] + lotISO[2] + lotISO[3];
+
+    var monthca = [, 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    function normalDate(fieldName, dfName) {
+        if (dfName == "Canada_1") {
+            var monthNormal = 0
+            for (i=1; i<13; i++) {
+                if ((fieldName[3]+fieldName[4]+fieldName[5]).toUpperCase() == monthca[i]) {
+                    if (i < 10) {
+                        monthNormal = '0' + i;
+                    } else {
+                        monthNormal = i;
+                    }
+                }
+            }
+            return fieldName[0]+fieldName[1]+'.'+monthNormal+'.'+fieldName[7]+fieldName[8]+fieldName[9]+fieldName[10];
+        } else if (dfName == "Japan_2") {
+            return fieldName[8]+fieldName[9]+'.'+fieldName[5]+fieldName[6]+'.'+fieldName[0]+fieldName[1]+fieldName[2]+fieldName[3];
+        } else if (dfName == "-- undefinied --") {
+            return fieldName[8]+fieldName[9]+'.'+fieldName[5]+fieldName[6]+'.'+fieldName[0]+fieldName[1]+fieldName[2]+fieldName[3];
+        } else if (dfName == "USA_1" || dfName == "USA_2") {
+            return fieldName[3]+fieldName[4]+'.'+fieldName[0]+fieldName[1]+'.'+fieldName[6]+fieldName[7]+fieldName[8]+fieldName[9];
+        } else if (dfName == "USA_3") {
+            monthNormal = 0;
+            for (i=1; i<13; i++) {
+                if ((fieldName[0]+fieldName[1]+fieldName[2]).toUpperCase() == monthca[i]) {
+                    if (i < 10) {
+                        monthNormal = '0' + i;
+                    } else {
+                        monthNormal = i;
+                    }
+                }
+            }
+            return fieldName[4]+fieldName[5]+'.'+monthNormal+'.'+fieldName[7]+fieldName[8]+fieldName[9]+fieldName[10];
+        } else {
+            return fieldName;
+        }
+    }
 
      var poNum = document.createElement('input');
     poNum.id = 'tpon';
@@ -455,7 +495,7 @@ function makeTrackBoard (qr) {
     ,vrb :   1
     });
     }*/
-    else if (TIND == '3.5.1.115') {
+  /*  else if (TIND == '3.5.1.115') {
     svgNode = QRCode({
          msg :  STX + 'M' + TIND + ' (QR)' + ETX
          + STX + 'UBMHD' + SEP + MHDF1 + ETX
@@ -470,7 +510,7 @@ function makeTrackBoard (qr) {
     ,ecb :   1
     ,vrb :   1
     });
-    }
+    }*/
 
     if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109' || TIND == '3.2.1.149')) {
     svgNode = QRCode({
@@ -521,23 +561,23 @@ function makeTrackBoard (qr) {
     }
 
     InsertText(3+(22*qr)+'mm', '7.5mm', PARTIA,'16px', 'Arial black');
-    InsertText(3+(22*qr)+'mm', '12.5mm', 'Data uboju: '+TDUB.toUpperCase(),'15px', 'Arial','bold');
+    InsertText(3+(22*qr)+'mm', '12.5mm', 'Data uboju: '+normalDate(TDUB, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold');
     if(TGGN){
                 InsertText(3+(22*qr)+'mm', '18.25mm', 'GGN: '+TGGN,'15px', 'Arial','bold');
             } else if (TGGN == "" && TDMR) {
-                InsertText(3+(22*qr)+'mm', '18.25mm', 'Data mrożenia: '+TDMR.toUpperCase(),'15px', 'Arial','bold');
+                InsertText(3+(22*qr)+'mm', '18.25mm', 'Data mrożenia: '+normalDate(TDMR, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold');
             }
             if(TLOT != TATC){
                 InsertText('3mm', '29.5mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
             } else if (TGGN && TDMR && TLOT == TATC) {
-                InsertText('3mm', '29.5mm', 'Data mrożenia: '+TDMR.toUpperCase(),'15px', 'Arial','bold')
+                InsertText('3mm', '29.5mm', 'Data mrożenia: '+normalDate(TDMR, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold')
             }
     if(TIND == '3.2.1.128') {
         InsertText(3+(22*qr)+'mm', '23.5mm', 'Kontener: '+poNum.value,'15px', 'Arial','bold')
     }
     InsertText('3mm', '35mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
     InsertText('3mm', '40.5mm','MHD: ','15px', 'Arial','bold');
-    InsertText('15mm', '40.5mm',TMHD.toUpperCase(),'16px', 'Arial black');
+    InsertText('15mm', '40.5mm',normalDate(TMHD, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'16px', 'Arial black');
     InsertText('3mm', '46mm','Lot: '+TLOT,'15px', 'Arial', 'bold');
     InsertText('52mm', '41mm','Data produkcji:', '11px', 'Arial', 'bold');
     InsertText('54mm', '46mm', lotISO, '13px', 'Arial', 'bold');
