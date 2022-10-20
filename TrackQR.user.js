@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.28
+// @version     1.30
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -206,13 +206,13 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     const SEP = String.fromCharCode(10);
     const CR = String.fromCharCode(13,10)
     var TIND = document.querySelector("#p_code_mil").value;
-    var TMHD = document.querySelector("#b_exp_date").value;
-    var TDMR = document.querySelector("#b_freezing_date").value;
+    var TMHD = document.querySelector("#exp_date").value;
+    var TDMR = document.querySelector("#freezing_date").value;
     var TLOT = document.querySelector("#b_lot_nr").value;
     var TATC = document.querySelector("#b_traceability_code").value;
-    var TDUB = document.querySelector("#b_slau_date").value;
+    var TDUB = document.querySelector("#slau_date").value;
     var TGGN = document.querySelector("div.row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").outerText;
-    var DPR = document.querySelector("#b_prod_date").value;
+    var DPR = document.querySelector("#prod_date").value;
     var PARTIA = document.querySelector(".card-header > strong:nth-child(1)").outerText;
     var PRODUKT = document.querySelector("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").outerText;
 	var CERT = document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
@@ -316,18 +316,18 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
   //  document.querySelector('#container > p:nth-child(2)').remove();
     document.querySelector('div.row > div.col-lg-6').style.height = "30";
 
-    if (document.querySelector("#b_freezing_date")) {
-        document.querySelector("#b_freezing_date").outerHTML = '<div id="b_freezing_date"><b style="color: blue; font-size:18;">'+TDMR+'</b>';
+    if (document.querySelector("#freezing_date")) {
+        document.querySelector("#freezing_date").outerHTML = '<div id="freezing_date"><b style="color: blue; font-size:18;">'+TDMR+'</b>';
     }
     if (TATC != TLOT) {
         document.querySelector("#b_lot_nr").outerHTML = '<div id="b_lot_nr"><b style="color: cornflowerblue;">'+TLOT+'</b>';
     } else {
         document.querySelector("#b_lot_nr").outerHTML = '<div id="b_lot_nr"><b style="color: chocolate;">'+TLOT+'</b>';
     }
-        document.querySelector("#b_slau_date").outerHTML = '<div id="b_slau_date"><b style="color: green; font-size:18;">'+TDUB+'</b>';
-    document.querySelector("#b_prod_date").outerHTML = '<div id="b_prod_date"><b style="color: goldenrod; font-size:18;">'+DPR+'</b>';
+        document.querySelector("#slau_date").outerHTML = '<div id="slau_date"><b style="color: green; font-size:18;">'+TDUB+'</b>';
+    document.querySelector("#prod_date").outerHTML = '<div id="prod_date"><b style="color: goldenrod; font-size:18;">'+DPR+'</b>';
     document.querySelector("#b_traceability_code").outerHTML = '<div id="b_traceability_code"><b style="color: chocolate;">'+TATC+'</b>';
-    document.querySelector("#b_exp_date").outerHTML = '<div id="b_exp_date"><b style="color: red; font-size:18;">'+TMHD+'</b>';
+    document.querySelector("#exp_date").outerHTML = '<div id="exp_date"><b style="color: red; font-size:18;">'+TMHD+'</b>';
 
     newButton();
 /*
@@ -422,11 +422,7 @@ function makeTrackBoard (qr) {
      msg :  'SLA|' + TIND
  	     + '|{DMR}=' + DMRF
          + '|{MHD}=' + MHDF1
-         + '|{LOT}=' + TLOT
-         + '|{GGN}=' + TGGN
-         + '|{PON}=' + poNum.value
-         + '|{DUB}=' + TDUB
-         + '|{ATC}=' + TATC + '|' + CR
+         + '|{LOT}=' + TLOT + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
@@ -439,9 +435,7 @@ function makeTrackBoard (qr) {
          + '|{MHD}=' + MHDF2
          + '|{LOT}=' + TLOT
          + '|{GGN}=' + TGGN
-         + '|{PON}=' + poNum.value
-         + '|{DUB}=' + TDUB
-         + '|{ATC}=' + TATC + '|' + CR
+         + '|{PON}=' + poNum.value + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
@@ -450,13 +444,8 @@ function makeTrackBoard (qr) {
     } else if (TIND == '3.2.1.109') {
     svgNode = QRCode({
      msg :  'SLA|' + TIND
- 	     + '|{DMR}=' + DMRF
          + '|{MHD}=' + MHDF3.toUpperCase()
-         + '|{LOT}=' + TLOT
-         + '|{GGN}=' + TGGN
-         + '|{PON}=' + poNum.value
-         + '|{DUB}=' + TDUB
-         + '|{ATC}=' + TATC + '|' + CR
+         + '|{LOT}=' + TLOT + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
@@ -467,11 +456,7 @@ function makeTrackBoard (qr) {
      msg :  'SLA|' + TIND
  	     + '|{DMR}=' + DMRF.toUpperCase()
          + '|{MHD}=' + TMHD.toUpperCase()
-         + '|{LOT}=' + TLOT
-         + '|{GGN}=' + TGGN
-         + '|{PON}=' + poNum.value
-         + '|{DUB}=' + TDUB
-         + '|{ATC}=' + TATC + '|' + CR
+         + '|{LOT}=' + TLOT + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
@@ -521,7 +506,6 @@ function makeTrackBoard (qr) {
          + STX + 'UTDUB' + SEP + TDUB + ETX
          + STX + 'UTGGN' + SEP + TGGN + ETX
          + STX + 'UTDMR' + SEP + TDMR + ETX
-         + STX + 'UTPON' + SEP + poNum.value + ETX
          ,pad :	 4
          ,ecl :  "L"
          ,ecb :   1
