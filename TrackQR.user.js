@@ -7,7 +7,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.30
+// @version     1.32
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -17,7 +17,10 @@ window.addEventListener ("load", DOM_ContentReady);
 function DOM_ContentReady () {
 
     document.querySelector('.navbar').style.height = 0;
-    document.querySelector('li.nav-item:nth-child(1)').remove();
+    if(document.querySelector('li.nav-item:nth-child(1)')) {
+        document.querySelector('li.nav-item:nth-child(1)').remove();
+
+}
 
 if(window.location.href.toString() === 'https://traceability24.eu/deliveries' || window.location.href.toString().substr(0,42) === 'https://traceability24.eu/deliveries/index'){
 
@@ -125,7 +128,9 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     document.querySelector('.col-md-offset-4').style.marginTop = "50";
 
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(1)').style.display = "none";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.position = "absolute";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "650";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.top = "-145";
 
     document.querySelector('div.card-body:nth-child(3)').style.height = "83";
 
@@ -499,7 +504,7 @@ function makeTrackBoard (qr) {
 
     if(!(TIND == '3.3.1.96' || TIND == '3.2.1.73' || TIND == '3.2.1.128' || TIND == '3.2.1.109' || TIND == '3.2.1.149')) {
     svgNode = QRCode({
-         msg :  STX + 'M' + TIND + ' (QR)' + ETX
+         msg :  STX + 'M' + TIND + ETX
          + STX + 'UTMHD' + SEP + TMHD + ETX
          + STX + 'UTLOT' + SEP + TLOT + ETX
          + STX + 'UTATC' + SEP + TATC + ETX
