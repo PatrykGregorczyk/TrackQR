@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.42
+// @version     1.43
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -273,7 +273,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     poNum.style.left = "1450px";
     poNum.onkeyup = function() {
         if (poNum.value.length == 6) {
-            makeTrackBoard(enableQr.checked);
+            makeTrackBoard(true);
         } else if (poNum.value.length < 6 && document.querySelector("#printtrack")){
             document.querySelector("#printtrack").remove();
         }
@@ -326,31 +326,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     trackCopies.style.top = "120px";
     trackCopies.style.left = "1450px";
     document.body.appendChild(trackCopies);
-
-        var enableQr = document.createElement('input');
-    enableQr.setAttribute('type', 'checkbox');
-    enableQr.defaultChecked = true;
-    enableQr.id = 'enableqrcb';
-    enableQr.style.position = "absolute";
-    enableQr.style.top = "80px";
-    enableQr.style.left = "1450px";
-    enableQr.onchange = function() {
-        if (enableQr.checked) {
-            makeTrackBoard(true);
-        document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
-        } else {
-        makeTrackBoard(false);
-            document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
-        }
-    }
-    document.body.appendChild(enableQr);
-
-    var labelForCb = document.createElement('p');
-    labelForCb.style.position = "absolute";
-    labelForCb.innerHTML = 'QRCode (klawisz q - zmiana)';
-    labelForCb.style.top = "76px";
-    labelForCb.style.left = "1470px";
-    document.body.appendChild(labelForCb);
 
     var labelForCopy = document.createElement('p');
     labelForCopy.style.position = "absolute";
@@ -482,14 +457,9 @@ function makeTrackBoard (qr) {
     var code = e.code;
         if (code == 'ArrowUp') {
             document.getElementById('lcopies').stepUp();
-        }
-        else if (code == 'ArrowDown') {
+        } else if (code == 'ArrowDown') {
             document.getElementById('lcopies').stepDown();
-        }
-        else if (code == 'KeyQ') {
-            document.getElementById('enableqrcb').click();
-        }
-        else if (code == 'Enter') {
+        } else if (code == 'Enter') {
             printPageArea("printtrack", trackCopies.value);
         }
     })
