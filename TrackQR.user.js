@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.43
+// @version     1.45
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -159,7 +159,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     document.querySelector('div.card-body:nth-child(5)').style.position = "absolute";
     document.querySelector('div.card-body:nth-child(5)').style.top = "-100";
-    document.querySelector('div.card-body:nth-child(5)').style.left = "-100";
+    document.querySelector('div.card-body:nth-child(5)').style.left = "-140";
 
     document.querySelector('div.card-body:nth-child(4)').style.position = "absolute";
     document.querySelector('div.card-body:nth-child(4)').style.left = "-500";
@@ -184,7 +184,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     document.querySelector('.col-lg-1').style.position = "absolute";
     document.querySelector('.col-lg-1').style.top = "-79";
-    document.querySelector('.col-lg-1').style.left = "277";
+    document.querySelector('.col-lg-1').style.left = "984";
 
     document.querySelector('.col-md-9').style.maxWidth = '50%';
 
