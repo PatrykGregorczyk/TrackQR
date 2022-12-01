@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.40
+// @version     1.42
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -122,8 +122,11 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('.col-md-offset-4').style.marginTop = "50";
 
     document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.position = "absolute";
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "650";
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.top = "-145";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "643";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.top = "-225";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.width = "100%";
+
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(2)').style.display = "none";
 
     document.querySelector('div.card-body:nth-child(3)').style.height = "83";
 
@@ -250,6 +253,10 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
                 }
             }
             return fieldName[4]+fieldName[5]+'.'+monthNormal+'.'+fieldName[7]+fieldName[8]+fieldName[9]+fieldName[10];
+        } else if (dfName == "Julian_date") {
+            var lotISO = new Date(20+fieldName.substr(0,2), 0,fieldName.substr(2,3),2);
+            lotISO = lotISO.toISOString();
+            return lotISO[8]+lotISO[9]+'.'+lotISO[5]+lotISO[6]+'.'+lotISO[0]+lotISO[1]+lotISO[2]+lotISO[3]
         } else {
             return fieldName;
         }
@@ -257,8 +264,6 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
      var poNum = document.createElement('input');
     poNum.id = 'tpon';
-    poNum.setAttribute('min', '202456');
-    poNum.setAttribute('max', '202465');
     poNum.style.width = "120px";
     poNum.defaultValue = "";
     poNum.maxLength = 6;
@@ -277,17 +282,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.body.appendChild(poNum);
     }
 
-    var MHDF1 = TMHD//[3] + TMHD[4] + '.' + TMHD[0] + TMHD[1] + '.' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
-    var MHDF2 = TMHD//[3] + TMHD[4] + '/' + TMHD[0] + TMHD[1] + '/' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
-    var MHDF3 = TMHD//[0] + TMHD[1] + ' ' + monthca[parseInt(TMHD[3] + TMHD[4])] + ' ' + TMHD[6] + TMHD[7] + TMHD[8] + TMHD[9];
-
-    var DMRF
-
    if(TDMR === ""){
        document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
-   } else {
-       TDMR = TDMR//[8] + TDMR[9] + '.' + TDMR[5] + TDMR[6] + '.' + TDMR[0] + TDMR[1] + TDMR[2] + TDMR[3];
-       DMRF = TDMR//[3] + TDMR[4] + '/' + TDMR[0] + TDMR[1] + '/' + TDMR[6] + TDMR[7] + TDMR[8] + TDMR[9];
    }
 
    for(i = 2; document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
@@ -338,7 +334,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     enableQr.style.position = "absolute";
     enableQr.style.top = "80px";
     enableQr.style.left = "1450px";
-    enableQr.onchange = function() {if (enableQr.checked) {
+    enableQr.onchange = function() {
+        if (enableQr.checked) {
             makeTrackBoard(true);
         document.getElementById("printtrack").addEventListener("click", () => printPageArea("printtrack", trackCopies.value));
         } else {
@@ -378,17 +375,18 @@ function makeTrackBoard (qr) {
     if (TIND == '3.2.1.128' && poNum.value.length == 6) {
     var svgNode = QRCode({
      msg :  'SLA|' + TIND
- 	     + '|{DMR}=' + DMRF
-         + '|{MHD}=' + MHDF2
-         + '|{LOT}=' + TLOT
-         + '|{GGN}=' + TGGN
-         + '|{PON}=' + poNum.value + '|' + CR
+ 	     + '|TDMR=' + TDMR
+         + '|TMHD=' + TMHD
+         + '|TLOT=' + TLOT
+         + '|TGGN=' + TGGN
+         + '|TPON=' + poNum.value + '|' + CR
   	,pad :	 4
     ,ecl :  "L"
     ,ecb :   1
     ,vrb :   1
     });
-    } 
+    }
+
     var trackBoard = document.createElement("div");
     trackBoard.id = "printtrack";
     trackBoard.style.fontSize = "0px";
@@ -400,7 +398,6 @@ function makeTrackBoard (qr) {
     trackBoard.style.border = "1px solid grey"
     trackBoard.style.borderRadius = "8px";
     document.body.appendChild(trackBoard);
-
 
     var trackLabel = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     trackLabel.style.fontSize = "0px";
