@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.45
+// @version     1.50
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -18,8 +18,8 @@ function DOM_ContentReady () {
     document.querySelector('.navbar').style.height = 0;
     if(document.querySelector('li.nav-item:nth-child(1)')) {
         document.querySelector('li.nav-item:nth-child(1)').remove();
+    }
 
-}
 
 if(window.location.href.toString() === 'https://traceability24.eu/deliveries' || window.location.href.toString().substr(0,42) === 'https://traceability24.eu/deliveries/index'){
 
@@ -355,7 +355,8 @@ function makeTrackBoard (qr) {
          + '|TLOT=' + TLOT
          + '|TGGN=' + TGGN
          + '|TPON=' + poNum.value + '|' + CR
-  	,pad :	 4
+    ,dim :  75
+    ,pad :	 0
     ,ecl :  "L"
     ,ecb :   1
     ,vrb :   1
@@ -393,21 +394,19 @@ function makeTrackBoard (qr) {
         }
         var newQR = QRCode({
             msg :  qrdata
-            ,pad :	 4
+            ,dim :  75
+            ,pad :	 0
             ,ecl :  "L"
             ,ecb :   1
             ,vrb :   1
         });
         if (TIND == "3.2.1.128") {
-            var s = svgNode.getElementsByTagName("path")[0].getAttribute('d');
+            svgNode.setAttribute('transform', 'translate(12,14)')
+            trackLabel.appendChild(svgNode);
         } else {
-            s = newQR.getElementsByTagName("path")[0].getAttribute('d');
+            newQR.setAttribute('transform', 'translate(12,14)')
+            trackLabel.appendChild(newQR);
         }
-            var trackPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        trackPath.setAttribute('d', s);
-        trackPath.setAttribute('transform', 'scale(1.9), translate(7,9)');
-        trackPath.setAttribute('fill','black');
-        trackLabel.appendChild(trackPath);
         if(res.data == undefined && qr == true && TIND != '3.2.1.128') {
         makeTrackBoard(false);
         }
