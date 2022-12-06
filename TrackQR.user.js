@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.60
+// @version     1.66
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -229,6 +229,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('div.row:nth-child(7)').remove();
     document.querySelector('hr.my-4:nth-child(7)').remove();
     document.querySelector('hr.my-4:nth-child(7)').remove();
+
+    if (document.querySelector('span.text-primary > br:nth-child(1)')) { document.querySelector('span.text-primary > br:nth-child(1)').outerHTML = ' | '; }
 
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
