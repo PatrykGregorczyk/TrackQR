@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.50
+// @version     1.60
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -113,26 +113,44 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
 if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/batches/view'){
 
     if (document.querySelector('.btn-primary')) {
-    document.querySelector('.btn-primary').style.position = "absolute";
-    document.querySelector('.btn-primary').style.left = "980";
-}
+        document.querySelector('.btn-primary').style.position = "absolute";
+        document.querySelector('.btn-primary').style.left = "980";
+    }
 
     document.querySelector('div.col-lg-1:nth-child(1)').remove();
 
     document.querySelector('.col-md-offset-4').style.marginTop = "50";
 
     document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.position = "absolute";
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "643";
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.top = "-225";
-    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.width = "100%";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "-165";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.top = "360";
+    document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.width = "120%";
 
     document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1) > div:nth-child(2)').style.display = "none";
 
-    document.querySelector('div.card-body:nth-child(3)').style.height = "83";
+    document.querySelector('div.card-body:nth-child(3)').style.position = "absolute";
+    document.querySelector('div.card-body:nth-child(3)').style.height = "155";
+    document.querySelector('div.card-body:nth-child(3)').style.width = "749";
+    document.querySelector('div.card-body:nth-child(3)').style.top = "43";
+    document.querySelector('div.card-body:nth-child(3)').style.left = "662";
+
 
     document.querySelector('div.col-lg-4:nth-child(2)').style.height = "0";
 
-    document.querySelector('div.card-body:nth-child(2) > div:nth-child(1)').style.marginBottom = "-35";
+    //document.querySelector('div.card-body:nth-child(2) > div:nth-child(1)').style.marginBottom = "-35";
+
+    document.querySelector('div.row:nth-child(3)').appendChild(document.querySelector('div.row:nth-child(5) > div:nth-child(2)'));
+    document.querySelector('div.row:nth-child(3)').appendChild(document.querySelector('div.row:nth-child(5) > div:nth-child(1)'));
+    document.querySelector('div.row:nth-child(3)').appendChild(document.querySelector('div.row:nth-child(9) > div:nth-child(2)'));
+    document.querySelector('div.row:nth-child(5)').appendChild(document.querySelector('div.row:nth-child(7) > div:nth-child(2)'));
+    document.querySelector('div.row:nth-child(5)').appendChild(document.querySelector('div.row:nth-child(7) > div:nth-child(1)'));
+    document.querySelector('div.row:nth-child(5)').appendChild(document.querySelector('div.row:nth-child(11) > div:nth-child(2)'));
+    document.querySelector('div.row:nth-child(5)').appendChild(document.querySelector('div.row:nth-child(11) > div:nth-child(1)'));
+    document.querySelector('div.row:nth-child(5)').appendChild(document.querySelector('div.row:nth-child(9) > div:nth-child(1)'));
+
+
+    //document.querySelector('div.card-body:nth-child(2) > div:nth-child(1)').appendChild(document.querySelector('div.row:nth-child(7) > div:nth-child(1)'));
+    //document.querySelector('div.card-body:nth-child(2) > div:nth-child(1)').appendChild(document.querySelector('div.row:nth-child(7) > div:nth-child(1)'));
 
     document.querySelector('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').style.marginTop = "-40";
     document.querySelector('div.col-lg-3:nth-child(2) > div:nth-child(1) > img:nth-child(1)').style.transform = "scale(0.7)";
@@ -159,12 +177,12 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     document.querySelector('div.card-body:nth-child(5)').style.position = "absolute";
     document.querySelector('div.card-body:nth-child(5)').style.top = "-100";
-    document.querySelector('div.card-body:nth-child(5)').style.left = "-140";
+    document.querySelector('div.card-body:nth-child(5)').style.left = "121";
 
-    document.querySelector('div.card-body:nth-child(4)').style.position = "absolute";
-    document.querySelector('div.card-body:nth-child(4)').style.left = "-500";
-    document.querySelector('div.card-body:nth-child(4)').style.top = "0";
-
+    /*document.querySelector('div.card-body:nth-child(4)').style.position = "absolute";
+    document.querySelector('div.card-body:nth-child(4)').style.left = "-485";
+    document.querySelector('div.card-body:nth-child(4)').style.top = "350";
+*/
     document.querySelector('.col-lg-4').style.maxWidth = "100%";
     document.querySelector('.col-lg-4').style.flex = "0 0 100%";
 
@@ -174,7 +192,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('.card-footer').style.top = "-92";
     document.querySelector('.card-footer').style.backgroundColor = "transparent";
     document.querySelector('.card-footer').style.color = "white !important";
-    document.querySelector('.card-footer').style.left = "369";
+    document.querySelector('.card-footer').style.left = "620";
 
     document.querySelectorAll('.btn').forEach(el => (el.style.lineHeight = 1));
 
@@ -184,20 +202,33 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
 
     document.querySelector('.col-lg-1').style.position = "absolute";
     document.querySelector('.col-lg-1').style.top = "-79";
-    document.querySelector('.col-lg-1').style.left = "984";
+    document.querySelector('.col-lg-1').style.left = "1240";
 
-    document.querySelector('.col-md-9').style.maxWidth = '50%';
+    document.querySelector('.col-lg-12').style.height = "126";
+    document.querySelector('.col-lg-12').style.top = "-46";
+
+    document.querySelectorAll('.col-lg-3').forEach(el => (el.style.flex = "0 0 5%"));
+    document.querySelectorAll('.col-lg-6').forEach(el => (el.style.flex = "0 0 20%"));
+    document.querySelector('.col-lg-6').style.flex = "0 0 23%";
+
+    document.querySelector('.col-md-9').style.maxWidth = '79.2%'
 
     document.querySelector('a.card-link:nth-child(1)').style.marginLeft = '1.25rem';
 
-   for(i = 3; document.querySelector('div.row:nth-child('+i+')'); i+=2) {
+    for(i = 3; document.querySelector('div.row:nth-child('+i+')'); i+=2) {
         document.querySelector('div.row:nth-child('+i+')').style.marginTop = '-10';
         document.querySelector('div.row:nth-child('+i+')').style.marginBottom = '-25';
     }
 
-    if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
+   /* if (document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText == "") {
         document.querySelector("div.row:nth-child(9) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").innerText = "\xa0"; // hard space
-    }
+    }*/
+
+    document.querySelector('div.row:nth-child(11)').remove();
+    document.querySelector('div.row:nth-child(9)').remove();
+    document.querySelector('div.row:nth-child(7)').remove();
+    document.querySelector('hr.my-4:nth-child(7)').remove();
+    document.querySelector('hr.my-4:nth-child(7)').remove();
 
     const STX = String.fromCharCode(2);
     const ETX = String.fromCharCode(3);
@@ -209,11 +240,11 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var TLOT = document.querySelector("#b_lot_nr").value;
     var TATC = document.querySelector("#b_traceability_code").value;
     var TDUB = document.querySelector("#slau_date").value;
-    var TGGN = document.querySelector("div.row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").outerText;
+    var TGGN = document.querySelector("div.row:nth-child(3) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").outerText;
     var DPR = document.querySelector("#prod_date").value;
     var PARTIA = document.querySelector(".card-header > strong:nth-child(1)").outerText;
     var PRODUKT = document.querySelector("div.col-lg-6:nth-child(3) > div:nth-child(1) > h5:nth-child(2)").outerText;
-	var CERT = document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
+	//var CERT = document.querySelector("div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)").outerText;
 
 	const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     var LotDate = new Date(20+TLOT.substr(-2,2), 0,TLOT.substr(-5,3),2);
@@ -262,15 +293,15 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         }
     }
 
-     var poNum = document.createElement('input');
+    var poNum = document.createElement('input');
     poNum.id = 'tpon';
     poNum.style.width = "120px";
     poNum.defaultValue = "";
     poNum.maxLength = 6;
     poNum.minLength = 6;
     poNum.style.position = "absolute";
-    poNum.style.top = "160px";
-    poNum.style.left = "1450px";
+    poNum.style.top = "470px";
+    poNum.style.left = "1000px";
     poNum.onkeyup = function() {
         if (poNum.value.length == 6) {
             makeTrackBoard(true);
@@ -279,20 +310,24 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
         }
     }
     if(TIND == '3.2.1.128'){
-    document.body.appendChild(poNum);
+        document.body.appendChild(poNum);
     }
 
-   if(TDMR === ""){
-       document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
-   }
-
-   for(i = 2; document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
-    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.position = "absolute";
-    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.left = 15+60*(i-2);
-    document.querySelector('div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.top =
-        document.querySelector("div.row:nth-child(9) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").style.top;
+    if(TDMR === ""){
+        document.querySelector("div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1)").remove();
     }
-    document.querySelector('div.bs-component:nth-child(2) > div:nth-child(1)').style.margin = '-145';
+
+    for(i = 2; document.querySelector('div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')'); i++){
+        document.querySelector('div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.position = "absolute";
+        document.querySelector('div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.left = 15+60*(i-2);
+        document.querySelector('div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > h5:nth-child('+i+')').style.top =
+        document.querySelector("div.row:nth-child(5) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(2)").style.top;
+    }
+
+    document.querySelector('div.bs-component:nth-child(2)').style.position= 'absolute';
+    document.querySelector('div.bs-component:nth-child(2)').style.left = '15';
+    document.querySelector('div.bs-component:nth-child(2)').style.top = '70';
+    document.querySelector('div.bs-component:nth-child(2)').style.width = '200';
 
 
 
@@ -323,22 +358,22 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     trackCopies.style.width = "50px";
     trackCopies.defaultValue = 4;
     trackCopies.style.position = "absolute";
-    trackCopies.style.top = "120px";
-    trackCopies.style.left = "1450px";
+    trackCopies.style.top = "435px";
+    trackCopies.style.left = "1000px";
     document.body.appendChild(trackCopies);
 
     var labelForCopy = document.createElement('p');
     labelForCopy.style.position = "absolute";
     labelForCopy.innerHTML = 'Ilość kopii (strzałki - zmiana; enter - drukuj)';
-    labelForCopy.style.top = "121px";
-    labelForCopy.style.left = "1510px";
+    labelForCopy.style.top = "436px";
+    labelForCopy.style.left = "1060px";
     document.body.appendChild(labelForCopy);
 
     var labelForPon = document.createElement('p');
     labelForPon.style.position = "absolute";
     labelForPon.innerHTML = 'Kontener';
-    labelForPon.style.top = "163px";
-    labelForPon.style.left = "1590px";
+    labelForPon.style.top = "472px";
+    labelForPon.style.left = "1135px";
     if(TIND == '3.2.1.128') {
     document.body.appendChild(labelForPon);
     }
@@ -367,8 +402,8 @@ function makeTrackBoard (qr) {
     trackBoard.id = "printtrack";
     trackBoard.style.fontSize = "0px";
     trackBoard.style.position = "absolute";
-    trackBoard.style.top = "200px";
-    trackBoard.style.left = "1450px";
+    trackBoard.style.top = "435px";
+    trackBoard.style.left = "1350px";
     trackBoard.style.width = "78mm";
     trackBoard.style.height = "50mm";
     trackBoard.style.border = "1px solid grey"
