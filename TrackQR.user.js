@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.70
+// @version     1.80
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -42,23 +42,29 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
         document.querySelector('div.row:nth-child(1)').remove();
         document.querySelector('hr').style.borderTop = '0';
         document.querySelector('.col-md-8').style.top = '20';
+        document.getElementById('b_ean').tabIndex = '-1';
+        document.getElementById('name').tabIndex = '-1';
+        if(window.location.href.toString().substr(0,40) === 'https://traceability24.eu/batches/update'){
+            document.getElementsByName('b_coc_milarex')[0].tabIndex = '-1';
+        }
 
         funcButton('Pobierz z lotu', document.querySelector('[name="b_prod_date"]').parentElement.parentElement.parentElement, 1);
         document.getElementById("button1").addEventListener("click", () => getLotBut('[name="b_prod_date"]'));
 
-        funcButton('+ 12m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 2);
-        document.getElementById("button2").addEventListener("click", () => cngDate(12, 0));
-        funcButton('+ 15m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 3);
-        document.getElementById("button3").addEventListener("click", () => cngDate(15, 0));
-        funcButton('+ 18m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 4);
-        document.getElementById("button4").addEventListener("click", () => cngDate(18, 0));
-        funcButton('+ 24m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 5);
-        document.getElementById("button5").addEventListener("click", () => cngDate(24, 0));
-        funcButton('JP18-1', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 6);
+        funcButton('Japonia - ostatni dzień 17 miesiąca', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 6);
         document.getElementById("button6").addEventListener("click", () => cngDate(18, 1));
 
         funcButton('Pobierz z lotu', document.querySelector('[name="b_freezing_date"]').parentElement.parentElement.parentElement, 7);
         document.getElementById("button7").addEventListener("click", () => getLotBut('[name="b_freezing_date"]'));
+
+        document.getElementById("b_lot_nr").addEventListener('keydown', function(e) {
+            if (e.keyCode == 9){ getLotBut('[name="b_prod_date"]') }
+        });
+
+        document.getElementById("b_exp_date").addEventListener('keydown', function(e) {
+            if (e.keyCode == 9 && document.getElementById("b_exp_date").value == ""){ getLotBut('[name="b_freezing_date"]') }
+        });
+
     }
 
 if(window.location.href.toString() === 'https://traceability24.eu/batches' || window.location.href.toString().substr(0,39) === 'https://traceability24.eu/batches/index'){
@@ -70,7 +76,7 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
     }
     for(i = 1; i < 7; i++){
     document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(1) > div:nth-child(1) > label:nth-child(1)').remove();
-        if(i < 4) {
+        if(i < 5) {
         document.body.querySelector('div.col-lg-2:nth-child('+i+') > div:nth-child(2) > div:nth-child(1) > label:nth-child(1)').remove();
         }
     }
@@ -80,9 +86,10 @@ if(window.location.href.toString() === 'https://traceability24.eu/batches' || wi
     document.querySelector('div.col-lg-2:nth-child(3) > div:nth-child(2) > div:nth-child(1)').children[0][0].innerText = 'Platform:'
 
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_products_p_code"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_lot_nr"]').parentElement.parentElement)
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_batch_nr"]').parentElement.parentElement)
-    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_ean"]').parentElement.parentElement)
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_traceability_code"]').parentElement.parentElement)
+    document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_ean"]').parentElement.parentElement)
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="dorm_supplier_name"]').parentElement.parentElement)
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_prod_date_from"]').parentElement.parentElement)
     document.querySelector("div.row:nth-child(3)").appendChild(document.querySelector('[name="b_prod_date_to"]').parentElement.parentElement)
@@ -120,6 +127,19 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('div.col-lg-1:nth-child(1)').remove();
 
     document.querySelector('.col-md-offset-4').style.marginTop = "50";
+
+    if(document.querySelector('div.card-body:nth-child(5) > a:nth-child(5)')){
+    document.querySelector('div.card-body:nth-child(5) > a:nth-child(5)').remove()
+        if(document.querySelector('div.card-body:nth-child(5) > a:nth-child(3)')) {
+            document.querySelector('div.card-body:nth-child(5) > a:nth-child(3)').remove()
+        }
+    } else {
+    document.querySelector('div.card-body:nth-child(5) > a:nth-child(3)').remove()
+    }
+
+    if(document.querySelector('.btn-outline-info')){
+        document.querySelector('.btn-outline-info').disabled = true;
+    }
 
     document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.position = "absolute";
     document.querySelector('div.col-lg-4:nth-child(3) > div:nth-child(1)').style.left = "95";
@@ -211,7 +231,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('.card-footer').style.top = "-92";
     document.querySelector('.card-footer').style.backgroundColor = "transparent";
     document.querySelector('.card-footer').style.color = "white !important";
-    document.querySelector('.card-footer').style.left = "620";
+    document.querySelector('.card-footer').style.left = "670";
 
     document.querySelectorAll('.btn').forEach(el => (el.style.lineHeight = 1));
 
@@ -248,6 +268,8 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     document.querySelector('hr.my-4:nth-child(7)').remove();
     document.querySelector('hr.my-4:nth-child(7)').remove();
     document.querySelector('hr.my-4:nth-child(6)').remove();
+
+   // document.querySelector('div.col-lg-3:nth-child(1)').appendChild(document.querySelector('div.col-lg-4:nth-child(2) > div:nth-child(1) > div:nth-child(1)'));
 
     if (document.querySelector('span.text-primary > br:nth-child(1)')) { document.querySelector('span.text-primary > br:nth-child(1)').outerHTML = ' | '; }
 
@@ -379,7 +401,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     trackCopies.setAttribute('max', '10');
     trackCopies.style.width = "50px";
     trackCopies.style.height = "25px";
-    trackCopies.defaultValue = 4;
+    trackCopies.defaultValue = 5;
     trackCopies.style.position = "absolute";
     trackCopies.style.top = "305px";
     trackCopies.style.left = "1007px";
@@ -404,6 +426,10 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     }
 
 function makeTrackBoard (qr) {
+    if(document.querySelector('.text-info').innerHTML == 'Default'){
+        qr=0;
+    }
+
     if(document.querySelector("#printtrack")) {
         document.querySelector("#printtrack").remove();
     }
@@ -482,6 +508,9 @@ function makeTrackBoard (qr) {
             }
             if(TLOT != TATC){
                 InsertText('3mm', '29.5mm', 'Traceability: '+TATC,'15px', 'Arial','bold');
+                if (TGGN && TDMR) {
+                    InsertText(3+(22*qr)+'mm', '23.5mm', 'Data mrożenia: '+normalDate(TDMR, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold')
+                }
             } else if (TGGN && TDMR && TLOT == TATC) {
                 InsertText('3mm', '29.5mm', 'Data mrożenia: '+normalDate(TDMR, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold')
             }
