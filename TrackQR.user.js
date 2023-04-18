@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.80
+// @version     1.77
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -339,21 +339,22 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     var poNum = document.createElement('input');
     poNum.id = 'tpon';
     poNum.style.width = "120px";
-    poNum.defaultValue = "";
-    poNum.maxLength = 6;
-    poNum.minLength = 6;
+    poNum.defaultValue = "non";
+    poNum.maxLength = 4;
+    poNum.minLength = 4;
     poNum.style.position = "absolute";
     poNum.style.height = "25px";
     poNum.style.top = "350px";
     poNum.style.left = "1007px";
     poNum.onkeyup = function() {
-        if (poNum.value.length == 6) {
+        if (poNum.value.length == 4) {
             makeTrackBoard(true);
-        } else if (poNum.value.length < 6 && document.querySelector("#printtrack")){
+        } else if (poNum.value.length < 4 && document.querySelector("#printtrack")){
             document.querySelector("#printtrack").remove();
         }
     }
-    if(TIND == '3.2.1.128'){
+    if(TIND == '3.2.1.128' || TIND == '3.2.1.153' || TIND == '3.2.1.154' || TIND == '3.2.1.155'){
+        poNum.defaultValue = "";
         document.querySelector('div.card-body:nth-child(4)').appendChild(poNum);
     }
 
@@ -421,7 +422,7 @@ if(window.location.href.toString().substr(0,38) === 'https://traceability24.eu/b
     labelForPon.style.top = "350px";
     labelForPon.style.height = "25px";
     labelForPon.style.left = "1150px";
-    if(TIND == '3.2.1.128') {
+    if(TIND == '3.2.1.128' || TIND == '3.2.1.153' || TIND == '3.2.1.154' || TIND == '3.2.1.155') {
     document.querySelector('div.card-body:nth-child(4)').appendChild(labelForPon);
     }
 
@@ -433,14 +434,14 @@ function makeTrackBoard (qr) {
     if(document.querySelector("#printtrack")) {
         document.querySelector("#printtrack").remove();
     }
-    if (TIND == '3.2.1.128' && poNum.value.length == 6) {
+    if ((TIND == '3.2.1.128' || TIND == '3.2.1.153' || TIND == '3.2.1.154' || TIND == '3.2.1.155') && poNum.value.length == 4) {
     var svgNode = QRCode({
      msg :  'SLA|' + TIND
  	     + '|TDMR=' + TDMR
          + '|TMHD=' + TMHD
          + '|TLOT=' + TLOT
          + '|TGGN=' + TGGN
-         + '|TPON=' + poNum.value + '|' + CR
+         + '|TPON=600' + poNum.value + '|' + CR
     ,dim :  75
     ,pad :	 0
     ,ecl :  "L"
@@ -486,14 +487,14 @@ function makeTrackBoard (qr) {
             ,ecb :   1
             ,vrb :   1
         });
-        if (TIND == "3.2.1.128") {
+        if (TIND == '3.2.1.128' || TIND == '3.2.1.153' || TIND == '3.2.1.154' || TIND == '3.2.1.155') {
             svgNode.setAttribute('transform', 'translate(12,14)')
             trackLabel.appendChild(svgNode);
         } else {
             newQR.setAttribute('transform', 'translate(12,14)')
             trackLabel.appendChild(newQR);
         }
-        if(res.data == undefined && qr == true && TIND != '3.2.1.128') {
+        if(res.data == undefined && qr == true && (TIND != '3.2.1.128' || TIND != '3.2.1.153' || TIND != '3.2.1.154' || TIND != '3.2.1.155')) {
         makeTrackBoard(false);
         }
     });
@@ -514,8 +515,8 @@ function makeTrackBoard (qr) {
             } else if (TGGN && TDMR && TLOT == TATC) {
                 InsertText('3mm', '29.5mm', 'Data mrożenia: '+normalDate(TDMR, document.querySelector("div.bs-component:nth-child(2) > div:nth-child(1) > h5:nth-child(2)").outerText),'15px', 'Arial','bold')
             }
-    if(TIND == '3.2.1.128') {
-        InsertText(3+(22*qr)+'mm', '23.5mm', 'Kontener: '+poNum.value,'15px', 'Arial','bold')
+    if(TIND == '3.2.1.128' || TIND == '3.2.1.153' || TIND == '3.2.1.154' || TIND == '3.2.1.155') {
+        InsertText(3+(22*qr)+'mm', '23.5mm', 'Kontener: 600'+poNum.value,'15px', 'Arial','bold')
     }
     InsertText('3mm', '35mm', 'Indeks: '+TIND,'15px', 'Arial','bold');
     InsertText('3mm', '40.5mm','MHD: ','15px', 'Arial','bold');
@@ -537,8 +538,12 @@ function makeTrackBoard (qr) {
 
     }
 }
-    if (TIND == '3.2.1.128' && poNum.value.length == 6 || TIND != '3.2.1.128') {
+
+    console.log(poNum.value)
+    if (poNum.value == "non") {
     makeTrackBoard(true);
+    } else if (poNum.value.length == 4 && poNum.value != "non") {
+        makeTrackBoard(true);
     }
 
     document.addEventListener('keydown', function(e) {
