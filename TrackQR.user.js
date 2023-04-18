@@ -6,7 +6,7 @@
 // @require     https://github.com/PatrykGregorczyk/TrackQR/blob/main/library.min.js?raw=true
 // @updateURL	https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
 // @downloadURL https://github.com/PatrykGregorczyk/TrackQR/blob/main/TrackQR.user.js?raw=true
-// @version     1.88
+// @version     1.89
 // @run-at      document-start
 // @grant       none
 // ==/UserScript==
@@ -51,8 +51,10 @@ if(window.location.href.toString() === 'https://traceability24.eu/deliveries' ||
         funcButton('Pobierz z lotu', document.querySelector('[name="b_prod_date"]').parentElement.parentElement.parentElement, 1);
         document.getElementById("button1").addEventListener("click", () => getLotBut('[name="b_prod_date"]'));
 
-        funcButton('Japonia - ostatni dzień 17 miesiąca', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 6);
+        funcButton('Japonia - 18m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 6);
         document.getElementById("button6").addEventListener("click", () => cngDate(18, 1));
+         funcButton('Wallmart 24m', document.querySelector('[name="b_exp_date"]').parentElement.parentElement.parentElement, 5);
+        document.getElementById("button5").addEventListener("click", () => cngDate(24, 0));
 
         funcButton('Pobierz z lotu', document.querySelector('[name="b_freezing_date"]').parentElement.parentElement.parentElement, 7);
         document.getElementById("button7").addEventListener("click", () => getLotBut('[name="b_freezing_date"]'));
@@ -609,8 +611,13 @@ function funcButton(name, position, ajdi) {
                 var newDataLot = dataLot.addMonths(range);
                 newDataLot = newDataLot.addDays(-1);
             } else {
-                dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, dataLot[8] + dataLot[9],2);
-                newDataLot = dataLot.addMonths(range);
+                if (dataLot[8] + dataLot[9]>14) {
+                    dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, 15,2);
+                    newDataLot = dataLot.addMonths(range);
+                } else {
+                    dataLot = new Date(dataLot[0] + dataLot[1] + dataLot[2] + dataLot[3],(dataLot[5] + dataLot[6])-1, 15,2);
+                    newDataLot = dataLot.addMonths(range-1);
+                }
             }
             $('[name="b_exp_date"]').datepicker('update', newDataLot);
         } else if (document.querySelector('[name="b_lot_nr"]').value) {
